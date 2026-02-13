@@ -1,0 +1,39 @@
+﻿# Git
+.git
+.gitignore
+.gitattributes
+
+# IDE
+.idea
+.vscode
+
+# Docker
+docker-compose.yml
+Dockerfile
+.dockerignore
+
+# Documentation
+README.md
+LICENSE
+docs
+
+# .NET Backend
+**/bin
+**/obj
+**/*.user
+**/*.suo
+
+# Node.js/Angular/Ionic Frontend
+**/node_modules
+**/npm-debug.log
+**/dist
+**/.angular
+
+# Tests
+**/TestResults
+**/tests/**/bin
+**/tests/**/obj
+
+# OS
+.DS_Store
+Thumbs.db
