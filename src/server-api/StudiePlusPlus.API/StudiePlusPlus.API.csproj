@@ -2,13 +2,16 @@
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
-        <Nullable>enable</Nullable>
-        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>disable</Nullable>
+        <WarningsAsErrors>enable</WarningsAsErrors>
+        <ImplicitUsings>disable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.22"/>
+        <PackageReference Include="Sentry.AspNetCore" Version="6.1.0" />
+        <PackageReference Include="Sentry.EntityFramework" Version="6.1.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2"/>
     </ItemGroup>
 
