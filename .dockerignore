@@ -6,6 +6,9 @@
 # IDE
 .idea
 .vscode
+.vs
+.vs/
+.vs/*
 
 # Docker
 docker-compose.yml
