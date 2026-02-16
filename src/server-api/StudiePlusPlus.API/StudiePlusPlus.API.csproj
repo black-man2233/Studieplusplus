@@ -9,10 +9,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.22"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.22" />
         <PackageReference Include="Sentry.AspNetCore" Version="6.1.0" />
         <PackageReference Include="Sentry.EntityFramework" Version="6.1.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
     </ItemGroup>
 
     <ItemGroup>
@@ -22,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\StudiePlusPlus.Application\StudiePlusPlus.Application.csproj" />
+      <ProjectReference Include="..\StudiePlusPlus.Infrastructure\StudiePlusPlus.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>

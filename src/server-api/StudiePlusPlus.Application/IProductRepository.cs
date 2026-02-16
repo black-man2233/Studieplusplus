@@ -1,9 +1,11 @@
-﻿using System;
+﻿using StudiePlusPlus.Domain;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using StudiePlusPlus.Domain;
 namespace StudiePlusPlus.Application;
 // Application Layer (Interfaces)
-public interface IProductRepository  
+public interface IProductRepository
 {
-    Task<Product> GetByIdAsync(Guid id);  
+    Task<Product> GetByIdAsync(Guid id);
+    Task<IEnumerable<Product>> GetAllAsync();
 }
