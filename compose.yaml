@@ -4,22 +4,3 @@
     build:
       context: .
       dockerfile: src/server-api/StudiePlusPlus.API/Dockerfile
-
-  studieplusplus.api.test:
-    image: studieplusplus.api.test
-    build:
-      context: .
-      dockerfile: tests/StudiePlusPlus.API.Test/Dockerfile
-
-  studieplusplus.infrastructure:
-    image: studieplusplus.infrastructure
-    build:
-      context: .
-      dockerfile: src/server-api/StudiePlusPlus.Infrastructure/Dockerfile
-
-  studieplusplus.shared:
-    image: studieplusplus.shared
-    build:
-      context: .
-      dockerfile: src/server-api/StudiePlusPlus.Shared/Dockerfile
-
