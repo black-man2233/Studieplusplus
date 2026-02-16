@@ -1,0 +1,6 @@
+﻿services:
+  studieplusplus.api:
+    image: studieplusplus.api
+    build:
+      context: .
+      dockerfile: src/server-api/StudiePlusPlus.API/Dockerfile
