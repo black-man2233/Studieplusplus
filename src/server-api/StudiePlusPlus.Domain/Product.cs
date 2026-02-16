@@ -1,4 +1,6 @@
-﻿namespace StudiePlusPlus.Domain;
+﻿using System;
+
+namespace StudiePlusPlus.Domain;
 
 // Domain Layer (No dependencies)
 public class Product  
