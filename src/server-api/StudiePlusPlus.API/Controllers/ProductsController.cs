@@ -9,10 +9,10 @@ namespace StudiePlusPlus.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ProductsController : ControllerBase
+public class ProductController : ControllerBase
 {
     private readonly IProductRepository _repo;
-    public ProductsController(IProductRepository repo) => _repo = repo;
+    public ProductController(IProductRepository repo) => _repo = repo;
 
 
     [HttpGet]
