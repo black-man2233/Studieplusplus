@@ -17,9 +17,20 @@ public class Grade : Entity<Guid>
     {
     }
 
-    public Grade(Guid studentId, Guid subjectId)
+    public Grade(Guid id, Guid studentId, Guid subjectId, decimal score, string label)
+    {
+        Id = id;
+        StudentId = studentId;
+        SubjectId = subjectId;
+        Score = score;
+        Label = label;
+    }
+
+    public void Update(Guid studentId, Guid subjectId, decimal score, string label)
     {
         StudentId = studentId;
         SubjectId = subjectId;
+        Score = score;
+        Label = label;
     }
 }
