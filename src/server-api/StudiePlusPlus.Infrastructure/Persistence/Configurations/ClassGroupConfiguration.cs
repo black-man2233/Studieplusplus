@@ -8,7 +8,7 @@ public class ClassGroupConfiguration : IEntityTypeConfiguration<ClassGroup>
 {
     public void Configure(EntityTypeBuilder<ClassGroup> builder)
     {
-        builder.ToTable("class_groups");
+        builder.ToTable("Classes");
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Name).HasMaxLength(100).IsRequired();
     }

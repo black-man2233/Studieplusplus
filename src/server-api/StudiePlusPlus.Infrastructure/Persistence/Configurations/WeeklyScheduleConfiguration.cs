@@ -8,8 +8,7 @@ public class WeeklyScheduleConfiguration : IEntityTypeConfiguration<WeeklySchedu
 {
     public void Configure(EntityTypeBuilder<WeeklySchedule> builder)
     {
-        builder.ToTable("weekly_schedules");
-
+        builder.ToTable("WeeklySchedules");
         builder.HasKey(x => x.Id);
     }
 }

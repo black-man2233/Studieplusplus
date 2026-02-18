@@ -8,7 +8,7 @@ public class SubjectConfiguration : IEntityTypeConfiguration<Subject>
 {
     public void Configure(EntityTypeBuilder<Subject> builder)
     {
-        builder.ToTable("subjects");
+        builder.ToTable("Subjects");
 
         builder.HasKey(x => x.Id);
 

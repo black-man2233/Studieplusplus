@@ -8,15 +8,13 @@ public sealed class EnrollmentConfiguration : IEntityTypeConfiguration<Enrollmen
 {
     public void Configure(EntityTypeBuilder<Enrollment> builder)
     {
-        builder.ToTable("enrollments");
+        builder.ToTable("Enrollments");
 
         builder.HasKey(x => x.Id);
-        builder.Property(x => x.Id).HasColumnName("id");
-
-        builder.Property(x => x.StudentId).HasColumnName("student_id");
-        builder.Property(x => x.ClassId).HasColumnName("class_id");
-
-        // Optional indexing hints:
+        // builder.Property(x => x.Id).HasColumnName("id");
+        // builder.Property(x => x.StudentId).HasColumnName("student_id");
+        // builder.Property(x => x.ClassId).HasColumnName("class_id");
+        
         builder.HasIndex(x => new { x.StudentId, x.ClassId }).IsUnique(false);
     }
 }

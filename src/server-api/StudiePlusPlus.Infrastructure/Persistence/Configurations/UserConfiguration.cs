@@ -21,11 +21,11 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasConversion(
                 v => v.Value,
                 v => new Email(v))
-            .HasColumnName("email")
+            // .HasColumnName("email")
             .IsRequired();
 
-        builder.Property(x => x.FirstName).HasColumnName("first_name").HasMaxLength(100);
-        builder.Property(x => x.LastName).HasColumnName("last_name").HasMaxLength(100);
-        builder.Property(x => x.LoginId).HasColumnName("login_id");
+        // builder.Property(x => x.FirstName).HasColumnName("first_name").HasMaxLength(100);
+        // builder.Property(x => x.LastName).HasColumnName("last_name").HasMaxLength(100);
+        // builder.Property(x => x.LoginId).HasColumnName("login_id");
     }
 }
