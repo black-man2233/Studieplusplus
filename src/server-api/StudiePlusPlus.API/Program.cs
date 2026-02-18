@@ -17,7 +17,8 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         builder.Services.AddControllers();
-        builder.Services.AddSingleton<IStudentRepository, StudentRepository>();
+
+        builder.Services.AddInfrastructure(builder.Configuration);
 
         var app = builder.Build();
 

@@ -26,7 +26,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\StudiePlusPlus.Application\StudiePlusPlus.Application.csproj" />
       <ProjectReference Include="..\StudiePlusPlus.Infrastructure\StudiePlusPlus.Infrastructure.csproj" />
     </ItemGroup>
 
