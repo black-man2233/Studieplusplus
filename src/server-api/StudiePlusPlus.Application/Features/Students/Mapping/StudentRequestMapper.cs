@@ -11,11 +11,10 @@ public sealed class CreateStudentRequestMapper : BaseMapper<CreateStudentRequest
     public override Student Map(CreateStudentRequest source)
     {
         return new Student(
-            Guid.NewGuid(),
+            Guid.Empty,
             source.FirstName,
             source.LastName,
-            new Email(source.Email),
-            source.LoginId);
+            new Email(source.Email));
     }
 
     public override void Update(CreateStudentRequest source, Student destination)
@@ -28,11 +27,10 @@ public sealed class UpdateStudentRequestMapper : BaseMapper<UpdateStudentRequest
     public override Student Map(UpdateStudentRequest source)
     {
         return new Student(
-            Guid.NewGuid(),
+            Guid.Empty,
             source.FirstName,
             source.LastName,
-            new Email(source.Email),
-            source.LoginId);
+            new Email(source.Email));
     }
 
     public override void Update(UpdateStudentRequest source, Student destination)

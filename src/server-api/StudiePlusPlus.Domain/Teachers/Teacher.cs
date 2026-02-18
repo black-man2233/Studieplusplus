@@ -11,8 +11,8 @@ public class Teacher : User
     
     private Teacher() { }
 
-    public Teacher(Guid id, string firstName, string lastName, Email email, Guid loginId, IEnumerable<string> specializations)
-        : base(id, firstName, lastName, email, loginId)
+    public Teacher(Guid userId, string firstName, string lastName, Email email, Guid loginId, IEnumerable<string> specializations)
+        : base(userId, firstName, lastName, email)
     {
         Specializations = specializations;
     }

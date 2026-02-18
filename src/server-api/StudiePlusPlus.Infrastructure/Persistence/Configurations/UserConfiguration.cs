@@ -16,7 +16,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             // .HasColumnName("id")
             .ValueGeneratedOnAdd()
             .HasDefaultValueSql("newsequentialid()");
-
+        
         builder.Property(x => x.Email)
             .HasConversion(
                 v => v.Value,

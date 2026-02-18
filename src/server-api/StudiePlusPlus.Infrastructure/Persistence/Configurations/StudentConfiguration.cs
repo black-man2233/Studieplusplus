@@ -9,5 +9,8 @@ public sealed class StudentConfiguration : IEntityTypeConfiguration<Student>
     public void Configure(EntityTypeBuilder<Student> builder)
     {
         builder.ToTable("Students");
+        builder.Property(x => x.LoginId)
+            .ValueGeneratedOnAdd()
+            .HasDefaultValueSql("newsequentialid()");
     }
 }

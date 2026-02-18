@@ -8,8 +8,8 @@ public sealed class Student : User
 {
     private Student() { }
 
-    public Student(Guid id, string firstName, string lastName, Email email, Guid loginId)
-        : base(id, firstName, lastName, email, loginId)
+    public Student(Guid id, string firstName, string lastName, Email email)
+        : base(id, firstName, lastName, email)
     {
     }
 }

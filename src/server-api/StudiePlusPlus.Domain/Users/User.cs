@@ -16,13 +16,13 @@ public abstract class User : Entity<Guid>
 
     protected User() { }
 
-    protected User(Guid id, string firstName, string lastName, Email email, Guid loginId)
+    protected User(Guid userId, string firstName, string lastName, Email email)
     {
-        Id = id;
+        Id = userId;
         FirstName = firstName;
         LastName = lastName;
         Email = email;
-        LoginId = loginId;
+        LoginId = Guid.Empty;
     }
 
     public void Update(string firstName, string lastName, Email email, Guid loginId)
