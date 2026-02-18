@@ -16,4 +16,10 @@ public sealed class Enrollment : Entity<Guid>
         StudentId = studentId;
         ClassId = classId;
     }
+
+    public void Update(Guid studentId, Guid classId)
+    {
+        StudentId = studentId;
+        ClassId = classId;
+    }
 }

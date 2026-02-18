@@ -1,17 +1,15 @@
 ﻿using System;
-using StudiePlusPlus.Domain.Common;
+using StudiePlusPlus.Domain.Users;
+using StudiePlusPlus.Domain.ValueObjects;
 
 namespace StudiePlusPlus.Domain.Students;
 
-public sealed class Student : Entity<Guid>
+public sealed class Student : User
 {
-    public Guid UserId { get; private set; }
-
     private Student() { }
 
-    public Student(Guid id, Guid userId)
+    public Student(Guid id, string firstName, string lastName, Email email, Guid loginId)
+        : base(id, firstName, lastName, email, loginId)
     {
-        Id = id;
-        UserId = userId;
     }
 }

@@ -1,22 +1,25 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using StudiePlusPlus.Domain.Common;
+using StudiePlusPlus.Domain.Users;
+using StudiePlusPlus.Domain.ValueObjects;
 
 namespace StudiePlusPlus.Domain.Teachers;
 
-public class Teacher : Entity<Guid>
+public class Teacher : User
 {
-    public Guid UserId { get; private set; }
-
-    public IEnumerable<string> Specializations { get; set; }
+    public IEnumerable<string> Specializations { get; private set; }
     
     private Teacher() { }
 
-    public Teacher(Guid id, Guid userId, IEnumerable<string> specializations)
+    public Teacher(Guid id, string firstName, string lastName, Email email, Guid loginId, IEnumerable<string> specializations)
+        : base(id, firstName, lastName, email, loginId)
     {
-        Id = id;
-        UserId = userId;
+        Specializations = specializations;
+    }
+
+    public void Update(string firstName, string lastName, Email email, Guid loginId, IEnumerable<string> specializations)
+    {
+        base.Update(firstName, lastName, email, loginId);
         Specializations = specializations;
     }
 }
