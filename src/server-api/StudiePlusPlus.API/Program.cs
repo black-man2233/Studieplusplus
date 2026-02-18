@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Sentry;
-using StudiePlusPlus.Application;
 using StudiePlusPlus.Infrastructure;
+using StudiePlusPlus.Infrastructure.Persistence;
+
+namespace StudiePlusPlus.API;
 
 public class Program
 {
@@ -17,11 +18,19 @@ public class Program
         builder.Services.AddSwaggerGen();
         builder.Services.AddControllers();
 
-        builder.Services.AddSingleton<IProductRepository, ProductRepository>();
+        builder.Services.AddInfrastructure(builder.Configuration);
+
         var app = builder.Build();
 
+        // Apply migrations automatically
+        using (var scope = app.Services.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            context.Database.EnsureCreated();
+        }
+
         // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
+        // if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
