@@ -34,7 +34,6 @@
 <script setup lang="ts">
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
 import { IonCol, IonGrid, IonRow } from '@ionic/vue';
-
 </script>
 
 <style scoped>
