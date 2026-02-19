@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using StudiePlusPlus.Domain.Common;
 using StudiePlusPlus.Domain.ValueObjects;
 

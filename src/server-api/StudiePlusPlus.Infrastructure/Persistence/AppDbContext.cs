@@ -15,11 +15,13 @@ public sealed class AppDbContext : DbContext
     public DbSet<Enrollment> Enrollments => Set<Enrollment>();
     public DbSet<Teacher> Teachers => Set<Teacher>();
     public DbSet<Grade> Grades => Set<Grade>();
-    public DbSet<ClassGroup> ClassGroups => Set<ClassGroup>();
+    public DbSet<Class> Classes => Set<Class>();
     public DbSet<Subject> Subjects => Set<Subject>();
     public DbSet<WeeklySchedule> WeeklySchedules => Set<WeeklySchedule>();
 
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+    {
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

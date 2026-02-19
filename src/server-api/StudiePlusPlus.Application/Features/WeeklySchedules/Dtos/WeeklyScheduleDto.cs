@@ -5,7 +5,7 @@ namespace StudiePlusPlus.Application.Features.WeeklySchedules.Dtos;
 
 public sealed record WeeklyScheduleDto(
     Guid Id,
-    Guid ClassGroupId,
+    // Guid ClassId,
     Guid StudentId,
     Guid TeacherId,
     DayOfTheWeek DayOfTheWeek,

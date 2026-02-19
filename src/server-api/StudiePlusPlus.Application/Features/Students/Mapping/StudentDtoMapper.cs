@@ -1,4 +1,5 @@
-﻿using StudiePlusPlus.Application.Common.Mapping;
+﻿using System;
+using StudiePlusPlus.Application.Common.Mapping;
 using StudiePlusPlus.Application.Features.Students.Dtos;
 using StudiePlusPlus.Domain.Students;
 
@@ -17,6 +18,5 @@ public sealed class StudentDtoMapper : BaseMapper<Student, StudentDto>
 
     public override void Update(Student source, StudentDto destination)
     {
-        // Not typically needed for DTOs
     }
 }

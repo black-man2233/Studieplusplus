@@ -5,9 +5,9 @@ using StudiePlusPlus.Domain.Academics;
 
 namespace StudiePlusPlus.Infrastructure.Persistence.Repositories;
 
-public class ClassGroupRepository : Repository<ClassGroup, Guid>, IClassGroupRepository
+public class ClassRepository : Repository<Class, Guid>, IClassRepository
 {
-    public ClassGroupRepository(AppDbContext db) : base(db)
+    public ClassRepository(AppDbContext db) : base(db)
     {
     }
 }

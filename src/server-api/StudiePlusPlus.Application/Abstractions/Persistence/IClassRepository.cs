@@ -3,7 +3,7 @@ using StudiePlusPlus.Domain.Academics;
 
 namespace StudiePlusPlus.Application.Abstractions.Persistence;
 
-public interface IClassGroupRepository : IRepository<ClassGroup, Guid>
+public interface IClassRepository : IRepository<Class, Guid>
 {
     
 }

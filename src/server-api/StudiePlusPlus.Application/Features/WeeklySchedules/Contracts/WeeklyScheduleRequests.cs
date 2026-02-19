@@ -4,7 +4,7 @@ using StudiePlusPlus.Domain.Common.Enums;
 namespace StudiePlusPlus.Application.Features.WeeklySchedules.Contracts;
 
 public sealed record CreateWeeklyScheduleRequest(
-    Guid ClassGroupId,
+    Guid ClassId,
     Guid StudentId,
     Guid TeacherId,
     DayOfTheWeek DayOfTheWeek,
@@ -13,7 +13,7 @@ public sealed record CreateWeeklyScheduleRequest(
 );
 
 public sealed record UpdateWeeklyScheduleRequest(
-    Guid ClassGroupId,
+    Guid ClassId,
     Guid StudentId,
     Guid TeacherId,
     DayOfTheWeek DayOfTheWeek,

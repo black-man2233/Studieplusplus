@@ -7,5 +7,5 @@ namespace StudiePlusPlus.Application.Abstractions.Persistence;
 
 public interface IStudentRepository : IRepository<Student, Guid>
 {
-    Task<Student> GetByUserIdAsync(Guid userId, CancellationToken ct = default);
+    // Task<Student> GetByUserIdAsync(Guid userId, CancellationToken ct = default);
 }

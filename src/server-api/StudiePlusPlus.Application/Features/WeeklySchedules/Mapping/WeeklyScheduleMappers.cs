@@ -10,7 +10,7 @@ public sealed class WeeklyScheduleDtoMapper : BaseMapper<WeeklySchedule, WeeklyS
 {
     public override WeeklyScheduleDto Map(WeeklySchedule source) => new(
         source.Id,
-        source.ClassGroupId,
+        // source.ClassId,
         source.StudentId,
         source.TeacherId,
         source.DayOfTheWeek,
@@ -23,7 +23,7 @@ public sealed class WeeklyScheduleDtoMapper : BaseMapper<WeeklySchedule, WeeklyS
 public sealed class CreateWeeklyScheduleRequestMapper : BaseMapper<CreateWeeklyScheduleRequest, WeeklySchedule>
 {
     public override WeeklySchedule Map(CreateWeeklyScheduleRequest source) => new(
-        source.ClassGroupId,
+        // source.ClassId,
         source.StudentId,
         source.TeacherId,
         source.DayOfTheWeek,
@@ -36,7 +36,7 @@ public sealed class CreateWeeklyScheduleRequestMapper : BaseMapper<CreateWeeklyS
 public sealed class UpdateWeeklyScheduleRequestMapper : BaseMapper<UpdateWeeklyScheduleRequest, WeeklySchedule>
 {
     public override WeeklySchedule Map(UpdateWeeklyScheduleRequest source) => new(
-        source.ClassGroupId,
+        // source.ClassId,
         source.StudentId,
         source.TeacherId,
         source.DayOfTheWeek,
@@ -45,7 +45,7 @@ public sealed class UpdateWeeklyScheduleRequestMapper : BaseMapper<UpdateWeeklyS
 
     public override void Update(UpdateWeeklyScheduleRequest source, WeeklySchedule destination)
     {
-        destination.ClassGroupId = source.ClassGroupId;
+        // destination.ClassId = source.ClassId;
         destination.StudentId = source.StudentId;
         destination.TeacherId = source.TeacherId;
         destination.DayOfTheWeek = source.DayOfTheWeek;

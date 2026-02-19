@@ -4,9 +4,9 @@ using StudiePlusPlus.Domain.Academics;
 
 namespace StudiePlusPlus.Infrastructure.Persistence.Configurations;
 
-public class ClassGroupConfiguration : IEntityTypeConfiguration<ClassGroup>
+public class ClassConfiguration : IEntityTypeConfiguration<Class>
 {
-    public void Configure(EntityTypeBuilder<ClassGroup> builder)
+    public void Configure(EntityTypeBuilder<Class> builder)
     {
         builder.ToTable("Classes");
         builder.HasKey(x => x.Id);

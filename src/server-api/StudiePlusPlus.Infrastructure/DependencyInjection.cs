@@ -5,9 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 using StudiePlusPlus.Application.Abstractions.Mapping;
 using StudiePlusPlus.Application.Abstractions.Persistence;
 using StudiePlusPlus.Application.Common.Handlers;
-using StudiePlusPlus.Application.Features.ClassGroups.Contracts;
-using StudiePlusPlus.Application.Features.ClassGroups.Dtos;
-using StudiePlusPlus.Application.Features.ClassGroups.Mapping;
+using StudiePlusPlus.Application.Features.Class.Contracts;
+using StudiePlusPlus.Application.Features.Class.Dtos;
+using StudiePlusPlus.Application.Features.Class.Mapping;
 using StudiePlusPlus.Application.Features.Enrollments.Contracts;
 using StudiePlusPlus.Application.Features.Enrollments.Dtos;
 using StudiePlusPlus.Application.Features.Enrollments.Mapping;
@@ -36,9 +36,7 @@ using StudiePlusPlus.Infrastructure.Persistence.Repositories;
 namespace StudiePlusPlus.Infrastructure;
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<AppDbContext>(options =>
         {
@@ -57,7 +55,7 @@ public static class DependencyInjection
         services.AddScoped<IGradeRepository, GradeRepository>();
         services.AddScoped<ISubjectRepository, SubjectRepository>();
         services.AddScoped<IWeeklyScheduleRepository, WeeklyScheduleRepository>();
-        services.AddScoped<IClassGroupRepository, ClassGroupRepository>();
+        services.AddScoped<IClassRepository, ClassRepository>();
         
         // Mappers
         services.AddScoped<IMapper<Student, StudentDto>, StudentDtoMapper>();
@@ -68,9 +66,9 @@ public static class DependencyInjection
         services.AddScoped<IMapper<CreateTeacherRequest, Teacher>, CreateTeacherRequestMapper>();
         services.AddScoped<IMapper<UpdateTeacherRequest, Teacher>, UpdateTeacherRequestMapper>();
 
-        services.AddScoped<IMapper<ClassGroup, ClassGroupDto>, ClassGroupDtoMapper>();
-        services.AddScoped<IMapper<CreateClassGroupRequest, ClassGroup>, CreateClassGroupRequestMapper>();
-        services.AddScoped<IMapper<UpdateClassGroupRequest, ClassGroup>, UpdateClassGroupRequestMapper>();
+        services.AddScoped<IMapper<Class, ClassDto>, ClassDtoMapper>();
+        services.AddScoped<IMapper<CreateClassRequest, Class>, CreateClassRequestMapper>();
+        services.AddScoped<IMapper<UpdateClassRequest, Class>, UpdateClassRequestMapper>();
 
         services.AddScoped<IMapper<Subject, SubjectDto>, SubjectDtoMapper>();
         services.AddScoped<IMapper<CreateSubjectRequest, Subject>, CreateSubjectRequestMapper>();
@@ -95,8 +93,8 @@ public static class DependencyInjection
         services.AddScoped<ReadHandler<Teacher, Guid, TeacherDto>>();
         services.AddScoped<WriteHandler<Teacher, Guid, CreateTeacherRequest, UpdateTeacherRequest, TeacherDto>>();
 
-        services.AddScoped<ReadHandler<ClassGroup, Guid, ClassGroupDto>>();
-        services.AddScoped<WriteHandler<ClassGroup, Guid, CreateClassGroupRequest, UpdateClassGroupRequest, ClassGroupDto>>();
+        services.AddScoped<ReadHandler<Class, Guid, ClassDto>>();
+        services.AddScoped<WriteHandler<Class, Guid, CreateClassRequest, UpdateClassRequest, ClassDto>>();
 
         services.AddScoped<ReadHandler<Subject, Guid, SubjectDto>>();
         services.AddScoped<WriteHandler<Subject, Guid, CreateSubjectRequest, UpdateSubjectRequest, SubjectDto>>();

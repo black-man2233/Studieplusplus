@@ -3,15 +3,15 @@ using StudiePlusPlus.Domain.Common;
 
 namespace StudiePlusPlus.Domain.Academics;
 
-public class ClassGroup : Entity<Guid>
+public class Class : Entity<Guid>
 {
     public string Name { get; set; }
 
-    public ClassGroup()
+    public Class()
     {
     }
 
-    public ClassGroup(Guid id, string name)
+    public Class(Guid id, string name)
     {
         Id = id;
         Name = name;
