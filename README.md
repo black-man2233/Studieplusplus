@@ -1,6 +1,8 @@
+
 # 📚 StudiePlusPlus
 
 <div align="center">
+
 
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)
 ![Status](https://img.shields.io/badge/Status-Active-brightgreen.svg)
@@ -25,6 +27,7 @@ A **cutting-edge**, full-stack school management platform that combines the powe
 | 🐳 **DevOps** | Fully containerized with Docker - One-command deployment |
 | ✅ **Quality** | Comprehensive unit & integration tests - Battle-tested |
 
+Public api url = [Web api is hosted at](http://long-sb.gl.at.ply.gg:15782/scalar/)
 ---
 
 ## 📁 Directory Structure
