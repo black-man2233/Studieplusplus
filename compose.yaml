@@ -4,3 +4,6 @@
     build:
       context: .
       dockerfile: src/server-api/StudiePlusPlus.API/Dockerfile
+    ports:
+      - "5168:8080"
+      - "5169:8081"
