@@ -12,10 +12,10 @@
       </ion-header>
 
       <div class="slider-wrap">
-        <Swiper :modules="[Pagination]" :slides-per-view="'auto'" :space-between="12" :grab-cursor="true" :pagination="{ clickable: true }">
+        <Swiper :modules="[Pagination]" :slides-per-view="'auto'" :space-between="10" :grab-cursor="true" :pagination="{ clickable: true }">
           <SwiperSlide v-for="card in cards" :key="card" class="card-slide">
             <div class="card-box">
-              <ion-label>Card #{{ card }}</ion-label>
+              <ion-label>{{ card }}</ion-label>
               <ion-img
                 class="card-img"
                 src="https://fastly.picsum.photos/id/866/1920/1080.jpg?hmac=dNBuPEp10RySTqlc5EpGw7QyrFIpBd2X88r1Ixla7pw"
@@ -64,7 +64,7 @@ import { Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 
-const cards = ref([0, 1, 2, 3, 4, 5, 6]);
+const cards = ref(["N", "I", "G", "G", "E", "R"]);
 </script>
 
 <style scoped>
@@ -78,6 +78,15 @@ ion-col {
   padding: 12%;
   margin: 2%;
   text-align: center;
+}
+
+@media (min-width: 992px) {
+  ion-menu.desktop-menu {
+    --width: 260px;
+  }
+  .swiper {
+    overflow: visible;
+  }
 }
 
 .slider-wrap {

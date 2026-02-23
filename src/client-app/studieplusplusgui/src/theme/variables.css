@@ -1,2 +1,33 @@
 /* For information on how to create your own theme, please refer to:
 http://ionicframework.com/docs/theming/ */
+
+@media (min-width: 992px) {
+  ion-tab-bar.mobile-tabs {
+    display: none !important;
+  }
+}
+
+@media (max-width: 991px) {
+  ion-menu.desktop-menu {
+    display: none;
+  }
+
+  ion-header {
+    display: none;
+  }
+}
+
+@media (min-width: 992px) {
+  ion-menu.desktop-menu {
+    --width: 260px;
+  }
+}
+
+ion-content {
+  --offset-bottom: auto!important;
+  --overflow: hidden;
+  overflow: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
