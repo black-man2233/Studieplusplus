@@ -6,7 +6,6 @@ using StudiePlusPlus.Application.Common.Handlers;
 
 namespace StudiePlusPlus.API.Controllers;
 
-[ApiController, Route("api/[controller]/[action]")]
 public abstract class CrudController<TEntity, TKey, TDto, TCreateRequest, TUpdateRequest> : ControllerBase
     where TEntity : class
 {

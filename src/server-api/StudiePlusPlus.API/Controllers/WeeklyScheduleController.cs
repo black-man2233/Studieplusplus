@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using StudiePlusPlus.Application.Common.Handlers;
 using StudiePlusPlus.Application.Features.Teachers.Contracts;
 using StudiePlusPlus.Application.Features.Teachers.Dtos;
@@ -8,6 +9,8 @@ using StudiePlusPlus.Domain.Scheduling;
 using StudiePlusPlus.Domain.Teachers;
 
 namespace StudiePlusPlus.API.Controllers;
+
+[ApiController, Route("api/[controller]/[action]")]
 
 public class WeeklyScheduleController : CrudController<WeeklySchedule, Guid, WeeklyScheduleDto, CreateWeeklyScheduleRequest, UpdateWeeklyScheduleRequest>
 {
