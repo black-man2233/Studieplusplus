@@ -1,41 +1,59 @@
+using System;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Sentry;
+using Scalar.AspNetCore;
+using StudiePlusPlus.Infrastructure;
+using StudiePlusPlus.Infrastructure.Persistence;
+namespace StudiePlusPlus.API;
 
 public class Program
 {
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        builder.Host.ConfigureWebHostDefaults(webBuilder =>
-        {
-            // Add the following line:
-            webBuilder.UseSentry(o =>
-            {
-                o.Dsn =
-                    "https://23e3603fcc9614f0d29d48f9f47c4c98@o4510894460502016.ingest.de.sentry.io/4510895474147408";
-                // When configuring for the first time, to see what the SDK is doing:
-                o.Debug = true;
-            });
-        });
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+        
+        builder.Services.AddControllers();
+        builder.Services.AddInfrastructure(builder.Configuration);
 
         var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
+        // Apply migrations automatically
+        using (var scope = app.Services.CreateScope())
         {
-            app.UseSwagger();
-            app.UseSwaggerUI();
+            var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            context.Database.EnsureCreated();
         }
 
+        if (app.Environment.IsDevelopment())
+        {
+            // app.UseSwagger();
+            // app.UseSwaggerUI();
+        }
+        
+        app.UseSwagger(options =>
+        {
+            options.RouteTemplate = "openapi/{documentName}.json";
+            options.SerializeAsV2 = true;
+            
+        });
+        app.MapScalarApiReference(options =>
+        {
+            options
+                .WithTitle("Studie ++ API")
+                .WithTheme(ScalarTheme.BluePlanet)
+                .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient)
+                .WithClassicLayout();
+        });
+        
+        
         app.UseHttpsRedirection();
-        SentrySdk.CaptureMessage("Sentry is running");
+        app.MapControllers();
         app.Run();
     }
 }
