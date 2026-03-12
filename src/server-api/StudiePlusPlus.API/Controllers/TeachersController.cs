@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using StudiePlusPlus.Application.Common.Handlers;
 using StudiePlusPlus.Application.Features.Students.Contracts;
 using StudiePlusPlus.Application.Features.Students.Dtos;
@@ -7,6 +8,8 @@ using StudiePlusPlus.Application.Features.Teachers.Dtos;
 using StudiePlusPlus.Domain.Teachers;
 
 namespace StudiePlusPlus.API.Controllers;
+
+[ApiController, Route("api/[controller]/[action]")]
 
 public class TeachersController : CrudController<Teacher, Guid, TeacherDto, CreateTeacherRequest, UpdateTeacherRequest>
 {
