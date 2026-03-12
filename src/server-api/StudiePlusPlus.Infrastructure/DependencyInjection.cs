@@ -41,7 +41,7 @@ public static class DependencyInjection
         services.AddDbContext<AppDbContext>(options =>
         {
             var connStr = configuration.GetConnectionString("Default");
-            options.UseMySql(connStr, ServerVersion.AutoDetect(connStr));
+            options.UseSqlServer(connStr);
         });
 
         // Generic repository

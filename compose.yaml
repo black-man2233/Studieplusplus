@@ -22,7 +22,7 @@ services:
       - "5168:8080"
       - "5169:8081"
     environment:
-      ConnectionStrings__Default: "Server=sqlserver,1433;Database=StudiePlusPlusDB;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;MultipleActiveResultSets=true"
+      ASPNETCORE_ENVIRONMENT: Development
     depends_on:
       sqlserver:
         condition: service_healthy
