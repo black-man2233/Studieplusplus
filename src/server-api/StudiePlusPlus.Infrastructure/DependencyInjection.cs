@@ -40,9 +40,8 @@ public static class DependencyInjection
     {
         services.AddDbContext<AppDbContext>(options =>
         {
-            options.UseSqlServer(
-                configuration.GetConnectionString("Default"),
-                sqlOptions => sqlOptions.EnableRetryOnFailure());
+            var connStr = configuration.GetConnectionString("Default");
+            options.UseMySql(connStr, ServerVersion.AutoDetect(connStr));
         });
 
         // Generic repository
