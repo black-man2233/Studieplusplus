@@ -12,8 +12,12 @@ http://ionicframework.com/docs/theming/ */
     display: none;
   }
 
-  ion-header {
-    display: none;
+  ion-page > ion-header {
+    display: none !important;
+  }
+
+  ion-header.menu-header {
+    display: none !important;
   }
 }
 

@@ -18,7 +18,7 @@
         </ion-content>
       </ion-menu>
 
-      <ion-header>
+      <ion-header class="menu-header">
         <ion-toolbar>
           <ion-buttons slot="start">
             <ion-menu-button></ion-menu-button>
