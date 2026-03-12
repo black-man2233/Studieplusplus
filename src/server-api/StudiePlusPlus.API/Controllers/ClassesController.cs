@@ -10,5 +10,6 @@ public class ClassesController : CrudController<Class, Guid, ClassDto, CreateCla
 {
     public ClassesController(ReadHandler<Class, Guid, ClassDto> read, WriteHandler<Class, Guid, CreateClassRequest, UpdateClassRequest, ClassDto> write) : base(read, write)
     {
+        
     }
 }
