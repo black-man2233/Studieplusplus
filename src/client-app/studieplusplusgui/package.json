@@ -26,6 +26,7 @@
     "ionicons": "^7.0.0",
     "swiper": "^12.1.2",
     "vue": "^3.3.0",
+    "vue-cal": "^5.0.1-rc.40",
     "vue-router": "^4.2.0"
   },
   "devDependencies": {
