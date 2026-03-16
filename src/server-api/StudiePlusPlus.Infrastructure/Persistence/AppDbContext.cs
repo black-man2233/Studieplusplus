@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using StudiePlusPlus.Domain.Academics;
+using StudiePlusPlus.Domain.Auth;
 using StudiePlusPlus.Domain.Messaging;
 using StudiePlusPlus.Domain.Scheduling;
 using StudiePlusPlus.Domain.Students;
@@ -11,6 +12,7 @@ namespace StudiePlusPlus.Infrastructure.Persistence;
 
 public sealed class AppDbContext : DbContext
 {
+    public DbSet<Login> Logins => Set<Login>();
     public DbSet<User> Users => Set<User>();
     public DbSet<Student> Students => Set<Student>();
     public DbSet<Enrollment> Enrollments => Set<Enrollment>();

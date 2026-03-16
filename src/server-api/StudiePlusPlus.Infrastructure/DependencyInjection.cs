@@ -9,6 +9,7 @@ using StudiePlusPlus.Application.Features.Class.Contracts;
 using StudiePlusPlus.Application.Features.Class.Dtos;
 using StudiePlusPlus.Application.Features.Class.Mapping;
 using StudiePlusPlus.Application.Abstractions.Security;
+using StudiePlusPlus.Domain.Auth;
 using StudiePlusPlus.Application.Features.Messages.Contracts;
 using StudiePlusPlus.Application.Features.Messages.Dtos;
 using StudiePlusPlus.Application.Features.Messages.Mapping;
@@ -62,7 +63,12 @@ public static class DependencyInjection
         services.AddScoped<IWeeklyScheduleRepository, WeeklyScheduleRepository>();
         services.AddScoped<IClassRepository, ClassRepository>();
         services.AddScoped<IMessageRepository, MessageRepository>();
-        
+        services.AddScoped<ILoginRepository,   LoginRepository>();
+        services.AddScoped<IUserRepository,    UserRepository>();
+
+        // Security
+        services.AddScoped<IPasswordHasher, PasswordHasher>();
+
         // Mappers
         services.AddScoped<IMapper<Student, StudentDto>, StudentDtoMapper>();
         services.AddScoped<IMapper<CreateStudentRequest, Student>, CreateStudentRequestMapper>();
