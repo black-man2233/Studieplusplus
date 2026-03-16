@@ -1,45 +1,151 @@
 <template>
   <ion-page v-bind="$attrs">
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Indstillinger</ion-title>
-      </ion-toolbar>
-    </ion-header>
 
-    <ion-content :fullscreen="false">
-      <SettingsModalComponent label="Profile" />
-      <SettingsModalComponent label="Sound" />
-      <SettingsModalComponent label="Theme" />
-      <SettingsModalComponent label="Login" />
-    
+
+    <ion-content :fullscreen="true" class="settings-content">
+      <div class="settings-shell">
+        <section class="settings-hero">
+          <p class="hero-kicker">Studie+Plus</p>
+          <h1 class="hero-title">Indstillinger</h1>
+          <p class="hero-subtitle">Tilpas profil, lyd, tema og sikkerhed for en mere personlig oplevelse.</p>
+        </section>
+
+        <section class="settings-panel">
+          <p class="panel-label">Generelt</p>
+          <div class="settings-row">
+            <SettingsModalComponent label="Profil" :options="profileOptions" />
+          </div>
+          <div class="settings-row">
+            <SettingsModalComponent label="Lyd" :options="soundOptions" />
+          </div>
+          <div class="settings-row">
+            <SettingsModalComponent label="Tema" :options="themeOptions" />
+          </div>
+
+          <p class="panel-label security-label">Sikkerhed</p>
+          <div class="settings-row">
+            <SettingsModalComponent label="Login" :options="loginOptions" />
+          </div>
+        </section>
+      </div>
     </ion-content>
   </ion-page>
 </template>
 
 <style scoped>
-ion-header {
-  background-color: #f0f0f0;
+.settings-content {
+  --background: transparent;
 }
 
-.settings-header {
-  font-size: 24px;
-  font-weight: bold;
-  margin: 16px;
-  background-color: #f0f0f0;
+.settings-shell {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 22px 12px 24px;
+}
+
+.settings-hero {
+  border-radius: 22px;
+  border: 1px solid rgba(167, 190, 221, 0.26);
+  background: linear-gradient(155deg, rgba(28, 44, 70, 0.8) 0%, rgba(36, 61, 97, 0.74) 54%, rgba(55, 87, 128, 0.68) 100%);
+  padding: 18px 16px;
+  box-shadow: 0 14px 26px rgba(10, 19, 35, 0.26);
+}
+
+.hero-kicker {
+  margin: 0;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: #d9c9ae;
+}
+
+.hero-title {
+  margin: 6px 0 4px;
+  font-size: clamp(1.45rem, 4.1vw, 1.92rem);
+  line-height: 1.12;
+  font-weight: 800;
+  color: #f6faff;
+}
+
+.hero-subtitle {
+  margin: 0;
+  font-size: 0.93rem;
+  font-weight: 500;
+  color: rgba(228, 239, 255, 0.88);
+}
+
+.settings-panel {
+  margin-top: 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(146, 173, 207, 0.22);
+  background: linear-gradient(180deg, rgba(18, 28, 44, 0.56) 0%, rgba(23, 34, 53, 0.5) 100%);
+  box-shadow: 0 10px 22px rgba(8, 14, 26, 0.16);
+  padding: 14px;
+}
+
+.panel-label {
+  margin: 2px 4px 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(200, 219, 245, 0.88);
+}
+
+.security-label {
+  margin-top: 14px;
+}
+
+.settings-row {
+  border-radius: 14px;
+  border: 1px solid rgba(161, 187, 221, 0.24);
+  background: rgba(95, 124, 164, 0.13);
+  padding: 4px 4px;
+}
+
+.settings-row + .settings-row {
+  margin-top: 8px;
+}
+
+:deep(.setting-trigger) {
+  --color: #eef4ff;
+  --padding-start: 14px;
+  --padding-end: 12px;
+  min-height: 52px;
+  margin: 0;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.96rem;
+  font-weight: 600;
+}
+
+:deep(.setting-trigger ion-icon) {
+  color: #d5e6ff;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 560px) {
+  .settings-shell {
+    padding: 16px 10px 18px;
+  }
 }
 </style>
 
 <script setup lang="ts">
 import {
-  IonHeader,
   IonContent,
-  IonToolbar,
-  IonTitle,
   IonPage,
 } from '@ionic/vue';
-import { ref } from 'vue';
+import { defineAsyncComponent } from 'vue';
 
-import SettingsModalComponent from '@/components/SettingsModalComponent.vue';
+const SettingsModalComponent = defineAsyncComponent(
+  () => import('@/components/SettingsModalComponent.vue') as Promise<any>
+);
 
+const profileOptions = ['Rediger profil', 'Skift profilbillede', 'Privatlivsindstillinger'];
+const soundOptions = ['Notifikationslyde', 'Ringetone', 'Vibration'];
+const themeOptions = ['Lyst tema', 'Moerkt tema', 'Foelg system'];
+const loginOptions = ['Skift adgangskode', 'To-faktor autentificering', 'Log ud'];
 
 </script>

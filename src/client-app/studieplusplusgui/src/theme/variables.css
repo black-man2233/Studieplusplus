@@ -27,7 +27,26 @@ http://ionicframework.com/docs/theming/ */
   }
 }
 
+:root {
+  --app-page-background:
+    radial-gradient(120% 90% at -14% -24%, rgba(120, 95, 88, 0.24) 0%, rgba(120, 95, 88, 0) 58%),
+    radial-gradient(105% 80% at 112% 8%, rgba(86, 111, 152, 0.28) 0%, rgba(86, 111, 152, 0) 56%),
+    radial-gradient(80% 72% at 50% 118%, rgba(80, 108, 118, 0.2) 0%, rgba(80, 108, 118, 0) 62%),
+    linear-gradient(160deg, #1b1f2a 0%, #232d41 52%, #2a384f 100%);
+}
+
+html,
+body,
+ion-app {
+  background: var(--app-page-background);
+}
+
+ion-page {
+  background: var(--app-page-background);
+}
+
 ion-content {
+  --background: transparent;
   --offset-bottom: auto!important;
   --overflow: hidden;
   overflow: auto;
