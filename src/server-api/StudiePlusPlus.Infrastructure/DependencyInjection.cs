@@ -8,6 +8,13 @@ using StudiePlusPlus.Application.Common.Handlers;
 using StudiePlusPlus.Application.Features.Class.Contracts;
 using StudiePlusPlus.Application.Features.Class.Dtos;
 using StudiePlusPlus.Application.Features.Class.Mapping;
+using StudiePlusPlus.Application.Abstractions.Security;
+using StudiePlusPlus.Domain.Auth;
+using StudiePlusPlus.Application.Features.Messages.Contracts;
+using StudiePlusPlus.Application.Features.Messages.Dtos;
+using StudiePlusPlus.Application.Features.Messages.Mapping;
+using StudiePlusPlus.Domain.Messaging;
+using StudiePlusPlus.Infrastructure.Security;
 using StudiePlusPlus.Application.Features.Enrollments.Contracts;
 using StudiePlusPlus.Application.Features.Enrollments.Dtos;
 using StudiePlusPlus.Application.Features.Enrollments.Mapping;
@@ -55,7 +62,13 @@ public static class DependencyInjection
         services.AddScoped<ISubjectRepository, SubjectRepository>();
         services.AddScoped<IWeeklyScheduleRepository, WeeklyScheduleRepository>();
         services.AddScoped<IClassRepository, ClassRepository>();
-        
+        services.AddScoped<IMessageRepository, MessageRepository>();
+        services.AddScoped<ILoginRepository,   LoginRepository>();
+        services.AddScoped<IUserRepository,    UserRepository>();
+
+        // Security
+        services.AddScoped<IPasswordHasher, PasswordHasher>();
+
         // Mappers
         services.AddScoped<IMapper<Student, StudentDto>, StudentDtoMapper>();
         services.AddScoped<IMapper<CreateStudentRequest, Student>, CreateStudentRequestMapper>();
@@ -106,7 +119,16 @@ public static class DependencyInjection
 
         services.AddScoped<ReadHandler<WeeklySchedule, Guid, WeeklyScheduleDto>>();
         services.AddScoped<WriteHandler<WeeklySchedule, Guid, CreateWeeklyScheduleRequest, UpdateWeeklyScheduleRequest, WeeklyScheduleDto>>();
-        
+
+        services.AddSingleton<IEncryptionService, AesEncryptionService>();
+
+        services.AddScoped<IMapper<Message, MessageDto>, MessageDtoMapper>();
+        services.AddScoped<IMapper<CreateMessageRequest, Message>, CreateMessageRequestMapper>();
+        services.AddScoped<IMapper<UpdateMessageRequest, Message>, UpdateMessageRequestMapper>();
+
+        services.AddScoped<ReadHandler<Message, Guid, MessageDto>>();
+        services.AddScoped<WriteHandler<Message, Guid, CreateMessageRequest, UpdateMessageRequest, MessageDto>>();
+
         return services;
     }
 }
