@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using StudiePlusPlus.Application.Abstractions.Persistence;
 using StudiePlusPlus.Application.Abstractions.Security;
@@ -24,19 +25,22 @@ public class AuthController : ControllerBase
     private readonly IPasswordHasher  _hasher;
     private readonly IConfiguration   _configuration;
     private readonly IWebHostEnvironment _env;
+    private readonly ILogger<AuthController> _logger;
 
     public AuthController(
         IUserRepository      users,
         ILoginRepository     logins,
         IPasswordHasher      hasher,
         IConfiguration       configuration,
-        IWebHostEnvironment  env)
+        IWebHostEnvironment  env,
+        ILogger<AuthController> logger)
     {
         _users         = users;
         _logins        = logins;
         _hasher        = hasher;
         _configuration = configuration;
         _env           = env;
+        _logger        = logger;
     }
 
     /// <summary>
@@ -45,25 +49,38 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request, CancellationToken ct)
     {
+        _logger.LogInformation("Login attempt for email={Email}", request.Email);
+
         var user = await _users.GetByEmailAsync(request.Email, ct);
         if (user is null)
+        {
+            _logger.LogWarning("Login failed — no user found for email={Email}", request.Email);
             return Unauthorized("Invalid email or password.");
+        }
 
         var login = await _logins.GetByUserIdAsync(user.Id, ct);
         if (login is null)
+        {
+            _logger.LogWarning("Login failed — no login record for userId={UserId}", user.Id);
             return Unauthorized("Invalid email or password.");
+        }
 
         if (!_hasher.Verify(login.PasswordHash, request.Password))
+        {
+            _logger.LogWarning("Login failed — invalid password for userId={UserId}", user.Id);
             return Unauthorized("Invalid email or password.");
+        }
 
+        _logger.LogInformation("Login successful — userId={UserId} email={Email}", user.Id, user.Email.Value);
         return Ok(new { token = GenerateToken(user.Id.ToString(), user.Email.Value) });
     }
 
     [HttpPost("logout")]
     public IActionResult Logout()
     {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "anonymous";
+        _logger.LogInformation("Logout — userId={UserId}", userId);
         // JWT is stateless – logout is handled client-side by discarding the token.
-        // TODO: implement token blacklisting if needed.
         return Ok("Logged out.");
     }
 
@@ -77,6 +94,7 @@ public class AuthController : ControllerBase
         if (!_env.IsDevelopment())
             return NotFound();
 
+        _logger.LogWarning("Dev token issued — this endpoint must never be reachable in Production");
         return Ok(new { token = GenerateToken("dev-user", "dev@studieplusplus.dk", role: "Admin") });
     }
 
@@ -101,6 +119,10 @@ public class AuthController : ControllerBase
             expires:            DateTime.UtcNow.AddHours(8),
             signingCredentials: new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256));
 
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+        _logger.LogDebug("JWT issued for userId={UserId} role={Role} expires={Expires}",
+            userId, role, DateTime.UtcNow.AddHours(8));
+
+        return tokenString;
     }
 }
