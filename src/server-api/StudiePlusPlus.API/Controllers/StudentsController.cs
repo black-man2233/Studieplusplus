@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using StudiePlusPlus.Application.Common.Handlers;
 using StudiePlusPlus.Application.Features.Students.Contracts;
 using StudiePlusPlus.Application.Features.Students.Dtos;
@@ -13,8 +14,9 @@ public class StudentsController : CrudController<Student, Guid, StudentDto, Crea
 {
     public StudentsController(
         ReadHandler<Student, Guid, StudentDto> read,
-        WriteHandler<Student, Guid, CreateStudentRequest, UpdateStudentRequest, StudentDto> write)
-        : base(read, write)
+        WriteHandler<Student, Guid, CreateStudentRequest, UpdateStudentRequest, StudentDto> write,
+        ILoggerFactory loggerFactory)
+        : base(read, write, loggerFactory)
     {
     }
 }

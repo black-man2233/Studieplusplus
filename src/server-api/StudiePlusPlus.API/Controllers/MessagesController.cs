@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using StudiePlusPlus.Application.Abstractions.Mapping;
 using StudiePlusPlus.Application.Abstractions.Persistence;
 using StudiePlusPlus.Application.Common.Handlers;
@@ -23,8 +24,9 @@ public class MessagesController : CrudController<Message, Guid, MessageDto, Crea
         ReadHandler<Message, Guid, MessageDto> read,
         WriteHandler<Message, Guid, CreateMessageRequest, UpdateMessageRequest, MessageDto> write,
         IMessageRepository messageRepository,
-        IMapper<Message, MessageDto> mapper)
-        : base(read, write)
+        IMapper<Message, MessageDto> mapper,
+        ILoggerFactory loggerFactory)
+        : base(read, write, loggerFactory)
     {
         _messageRepository = messageRepository;
         _mapper = mapper;
@@ -36,6 +38,7 @@ public class MessagesController : CrudController<Message, Guid, MessageDto, Crea
         [FromRoute] Guid userId2,
         CancellationToken ct)
     {
+        _logger.LogInformation("GET conversation between {User1} and {User2}", userId1, userId2);
         var messages = await _messageRepository.GetConversationAsync(userId1, userId2, ct);
         return Ok(_mapper.Map(messages));
     }
@@ -45,6 +48,7 @@ public class MessagesController : CrudController<Message, Guid, MessageDto, Crea
         [FromRoute] Guid userId,
         CancellationToken ct)
     {
+        _logger.LogInformation("GET messages for user {UserId}", userId);
         var messages = await _messageRepository.GetByUserAsync(userId, ct);
         return Ok(_mapper.Map(messages));
     }
