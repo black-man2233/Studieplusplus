@@ -137,6 +137,132 @@ docker-compose up --build
 
 ---
 
+## 💬 Messaging API
+
+The messaging system allows users (students and teachers) to send messages to each other. Messages are stored in the `Messages` table in the database and are automatically created on startup via `EnsureCreated`.
+
+### Endpoints
+
+| Method | Route | Description |
+|--------|-------|-------------|
+| `GET` | `/api/messages/GetAll` | Get all messages |
+| `GET` | `/api/messages/GetById/{id}` | Get a single message by ID |
+| `POST` | `/api/messages/Create` | Send a new message |
+| `PUT` | `/api/messages/Update/{id}` | Update a message (e.g. mark as read) |
+| `DELETE` | `/api/messages/Delete/{id}` | Delete a message |
+| `GET` | `/api/messages/conversation/{userId1}/{userId2}` | Get the full message history between two users, ordered by time |
+| `GET` | `/api/messages/user/{userId}` | Get all messages sent or received by a user |
+
+### Send a Message
+
+`POST /api/messages/Create`
+
+```json
+{
+  "senderId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "receiverId": "7bc12d45-1234-4321-a1b2-9f8e7d6c5b4a",
+  "content": "Hey, did you finish the assignment?"
+}
+```
+
+**Response** `201 Created`:
+```json
+{
+  "id": "a1b2c3d4-...",
+  "senderId": "3fa85f64-...",
+  "receiverId": "7bc12d45-...",
+  "content": "Hey, did you finish the assignment?",
+  "sentAt": "2026-03-16T12:00:00Z",
+  "isRead": false
+}
+```
+
+### Get Conversation Between Two Users
+
+`GET /api/messages/conversation/{userId1}/{userId2}`
+
+Returns all messages between the two users in chronological order. The order of `userId1`/`userId2` does not matter.
+
+```
+GET /api/messages/conversation/3fa85f64-.../7bc12d45-...
+```
+
+**Response** `200 OK`:
+```json
+[
+  {
+    "id": "a1b2c3d4-...",
+    "senderId": "3fa85f64-...",
+    "receiverId": "7bc12d45-...",
+    "content": "Hey, did you finish the assignment?",
+    "sentAt": "2026-03-16T12:00:00Z",
+    "isRead": true
+  },
+  {
+    "id": "b2c3d4e5-...",
+    "senderId": "7bc12d45-...",
+    "receiverId": "3fa85f64-...",
+    "content": "Almost done!",
+    "sentAt": "2026-03-16T12:05:00Z",
+    "isRead": false
+  }
+]
+```
+
+### Mark a Message as Read
+
+`PUT /api/messages/Update/{id}`
+
+```json
+{
+  "isRead": true
+}
+```
+
+### Notes
+
+- `senderId` and `receiverId` are the `Id` fields of a `Student` or `Teacher`.
+- User IDs can be retrieved from `GET /api/students` or `GET /api/teachers`.
+- The API is documented interactively via **Scalar** at `/scalar` when the server is running.
+
+---
+
+### Message Encryption
+
+Message content is encrypted at rest using **AES-256-CBC**. The plaintext is never stored in the database — only the ciphertext. Decryption happens automatically when messages are returned from the API, so clients always receive readable text.
+
+**How it works:**
+1. Client sends `POST /api/messages/Create` with plaintext `content`
+2. Server encrypts the content with AES-256 (random IV per message) before saving to the database
+3. The database stores: `{base64_IV}:{base64_ciphertext}`
+4. When any endpoint returns messages, the server decrypts the content before including it in the response
+
+**Configuration:**
+
+The encryption key lives in `appsettings.json` under `Encryption:Key`. It must be a **base64-encoded 32-byte (256-bit)** key.
+
+To generate a new key:
+```bash
+openssl rand -base64 32
+```
+
+Then set it in `appsettings.json`:
+```json
+{
+  "Encryption": {
+    "Key": "your-generated-key-here="
+  }
+}
+```
+
+> **Important:** If you rotate the key, all previously stored messages will fail to decrypt. Keep the key backed up and treat it as a secret — do not commit a production key to source control. Use environment variables or a secrets manager in production:
+> ```bash
+> # Override via environment variable (recommended for production)
+> Encryption__Key=your-key-here dotnet run
+> ```
+
+---
+
 ## 🤝 Contributing
 
 We love contributions! Whether it's bug reports, feature requests, or code, all are welcome.

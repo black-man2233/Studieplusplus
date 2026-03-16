@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using StudiePlusPlus.Domain.Academics;
+using StudiePlusPlus.Domain.Messaging;
 using StudiePlusPlus.Domain.Scheduling;
 using StudiePlusPlus.Domain.Students;
 using StudiePlusPlus.Domain.Teachers;
@@ -18,6 +19,7 @@ public sealed class AppDbContext : DbContext
     public DbSet<Class> Classes => Set<Class>();
     public DbSet<Subject> Subjects => Set<Subject>();
     public DbSet<WeeklySchedule> WeeklySchedules => Set<WeeklySchedule>();
+    public DbSet<Message> Messages => Set<Message>();
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
