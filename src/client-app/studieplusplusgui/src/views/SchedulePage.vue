@@ -4,9 +4,12 @@
       <div class="schedule-shell">
         <section class="calendar-panel">
           <vue-cal
+            :key="calendarModeKey"
             ref="calendarRef"
             class="schedule-cal"
-            :views="['day']"
+            :views="calendarViews"
+            :active-view="calendarView"
+            :start-week-on-sunday="false"
             :time-from="timeFrom"
             :time-to="timeTo"
             :time-step="timeStep"
@@ -36,7 +39,7 @@
 }
 
 .schedule-shell {
-  max-width: 900px;
+  max-width: 1120px;
   height: 100%;
   margin: 0 auto;
   padding: 4px 10px 6px;
@@ -44,6 +47,16 @@
   display: flex;
   flex-direction: column;
   gap: 0;
+}
+
+@media (min-width: 992px) {
+  .schedule-shell {
+    width: min(1360px, calc(100vw - 30px));
+    max-width: none;
+    margin-left: auto;
+    margin-right: 30px;
+    padding-right: 0;
+  }
 }
 
 .calendar-panel {
@@ -187,17 +200,26 @@
 </style>
 
 <script setup lang="ts">
-import { IonPage, IonContent } from '@ionic/vue';
-import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
+import { IonPage, IonContent, onIonViewDidEnter } from '@ionic/vue';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
 import { VueCal } from 'vue-cal'
 import 'vue-cal/style'
 
 const timeFrom = 7 * 60;
 const timeTo = 18 * 60;
 const timeStep = 60;
+const desktopBreakpoint = 992;
+type CalendarView = 'day' | 'week';
 
 const calendarRef = ref<any>(null);
 const timeCellHeight = ref(40);
+const isDesktop = ref(false);
+
+const calendarView = computed<CalendarView>(() => (isDesktop.value ? 'week' : 'day'));
+const calendarViews = computed<CalendarView[]>(() => [calendarView.value]);
+const calendarModeKey = computed(() => `schedule-${calendarView.value}`);
+
+const getIsDesktop = () => window.matchMedia(`(min-width: ${desktopBreakpoint}px)`).matches;
 
 const recalculateTimeCellHeight = async () => {
   await nextTick();
@@ -218,12 +240,29 @@ const recalculateTimeCellHeight = async () => {
   }
 };
 
-onMounted(() => {
+const handleResize = () => {
+  isDesktop.value = getIsDesktop();
   void recalculateTimeCellHeight();
-  window.addEventListener('resize', recalculateTimeCellHeight);
+};
+
+onMounted(() => {
+  isDesktop.value = getIsDesktop();
+  void recalculateTimeCellHeight();
+  window.setTimeout(() => {
+    void recalculateTimeCellHeight();
+  }, 100);
+  window.addEventListener('resize', handleResize);
+});
+
+onIonViewDidEnter(() => {
+  isDesktop.value = getIsDesktop();
+  void recalculateTimeCellHeight();
+  window.requestAnimationFrame(() => {
+    void recalculateTimeCellHeight();
+  });
 });
 
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', recalculateTimeCellHeight);
+  window.removeEventListener('resize', handleResize);
 });
 </script>
