@@ -20,6 +20,7 @@
 
       <ion-header class="menu-header">
         <ion-toolbar>
+          <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
           <ion-buttons slot="start">
             <ion-menu-button></ion-menu-button>
           </ion-buttons>
@@ -29,29 +30,30 @@
       <ion-tabs id="main-content">
         <ion-router-outlet></ion-router-outlet>
 
+        <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
         <ion-tab-bar :slot="'bottom'" class="mobile-tabs">
           <ion-tab-button tab="messages" href="/tabs/messages">
-            <ion-icon aria-hidden="true" :icon="triangle" />
+            <ion-icon aria-hidden="true" :icon="chatbubbleEllipsesOutline" />
             <ion-label>Beskeder</ion-label>
           </ion-tab-button>
 
           <ion-tab-button tab="schedule" href="/tabs/schedule">
-            <ion-icon aria-hidden="true" :icon="ellipse" />
+            <ion-icon aria-hidden="true" :icon="calendarOutline" />
             <ion-label>Skema</ion-label>
           </ion-tab-button>
 
           <ion-tab-button tab="home" href="/tabs/home">
-            <ion-icon aria-hidden="true" :icon="square" />
+            <ion-icon aria-hidden="true" :icon="homeOutline" />
             <ion-label>Hjem</ion-label>
           </ion-tab-button>
 
           <ion-tab-button tab="profile" href="/tabs/profile">
-            <ion-icon aria-hidden="true" :icon="square" />
+            <ion-icon aria-hidden="true" :icon="personOutline" />
             <ion-label>Profil</ion-label>
           </ion-tab-button>
 
           <ion-tab-button tab="settings" href="/tabs/settings">
-            <ion-icon aria-hidden="true" :icon="square" />
+            <ion-icon aria-hidden="true" :icon="settingsOutline" />
             <ion-label>Indstillinger</ion-label>
           </ion-tab-button>
         </ion-tab-bar>
@@ -79,5 +81,11 @@ import {
   IonMenuButton,
 } from '@ionic/vue';
 
-import { ellipse, square, triangle } from 'ionicons/icons';
+import {
+  calendarOutline,
+  chatbubbleEllipsesOutline,
+  homeOutline,
+  personOutline,
+  settingsOutline,
+} from 'ionicons/icons';
 </script>

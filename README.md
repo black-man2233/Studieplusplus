@@ -1,164 +1,168 @@
+# StudiePlusPlus
 
-# 📚 StudiePlusPlus
+Et alternativ til Studie+ – bygget af elever på Techcollege som en del af det Tværfaglige Projekt på H5.
 
-<div align="center">
-
-
-![License](https://img.shields.io/badge/License-MIT-blue.svg)
-![Status](https://img.shields.io/badge/Status-Active-brightgreen.svg)
-![Platform](https://img.shields.io/badge/Platform-Mobile%20%26%20Web-orange.svg)
-
-**The school platform that actually works** ✨
-
-> Fordi din skoleplatform ikke selv kunne finde ud af det. 🚀
-
-</div>
+Systemet består af et ASP.NET Core API, en SQL Server database og en Vue 3 + Ionic app.
 
 ---
 
-## 💡 About
+## Kom i gang
 
-A **cutting-edge**, full-stack school management platform that combines the power of modern web technologies. Built with ❤️ for students, teachers, and administrators who deserve better.
+**Kræver:** Docker Desktop
 
-| Feature | Details |
-|---------|---------|
-| 📱 **Frontend** | Ionic with Angular - Responsive, beautiful mobile-first UI |
-| 🔧 **Backend** | ASP.NET with Clean Architecture - Scalable & maintainable |
-| 🐳 **DevOps** | Fully containerized with Docker - One-command deployment |
-| ✅ **Quality** | Comprehensive unit & integration tests - Battle-tested |
+```bash
+docker compose up --build
+```
 
-Public api url = [Web api is hosted at](http://long-sb.gl.at.ply.gg:15782/scalar/)
+API kører på `http://localhost:5168`
+Interaktiv API-dokumentation: `http://localhost:5168/scalar/`
+
+**Frontend (separat):**
+
+```bash
+cd src/client-app/studieplusplusgui
+npm install
+npm run dev
+```
+
+App kører på `http://localhost:5173`
+
 ---
 
-## 📁 Directory Structure
+## Authentication
 
-<details open>
-<summary><b>Click to expand the project tree</b></summary>
+Alle API-endpoints kræver et JWT token. Send det i headeren på hvert request:
 
 ```
-studieplusplus/
-├── 🐳 docker-compose.yml          # Orchestrate all services
-├── .dockerignore                  # Optimize Docker builds
+Authorization: Bearer <token>
+```
+
+Tokenet udløber efter 8 timer.
+
+**Development – uden credentials:**
+
+```bash
+curl http://localhost:5168/api/auth/dev-token
+# { "token": "eyJhbGci..." }
+```
+
+**Med credentials:**
+
+```bash
+curl -X POST http://localhost:5168/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{ "email": "elev@techcollege.dk", "password": "hemlig123" }'
+# { "token": "eyJhbGci..." }
+```
+
+**Brug tokenet i et request:**
+
+```bash
+curl -H "Authorization: Bearer eyJhbGci..." \
+  http://localhost:5168/api/students
+```
+
+**I Scalar (browseren):**
+1. Åbn `http://localhost:5168/scalar/`
+2. Klik **Authenticate** øverst til højre
+3. Skriv `Bearer eyJhbGci...` i feltet
+4. Alle requests sender nu tokenet automatisk
+
+---
+
+## Projektstruktur
+
+```
+Studieplusplus/
+├── compose.yaml
+├── deploy.sh                          # Stop, ryd op, byg og start
 │
-├── src/
-│   ├── 📱 client-app/             # IONIC FRONTEND
-│   │   ├── src/
-│   │   │   ├── app/
-│   │   │   │   ├── core/          # 🔒 Singleton services & route guards
-│   │   │   │   ├── shared/        # 🎨 Reusable components & pipes
-│   │   │   │   ├── modules/       # 📄 Feature pages (Dashboard, Profile, etc.)
-│   │   │   └── assets/            # 🖼️ Icons, images, styles
-│   │   └── Dockerfile
-│   │
-│   └── 🔧 server-api/             # ASP.NET BACKEND (Clean Architecture)
-│       ├── StudiePlusPlus.Domain/        # 🏛️ Core business entities
-│       ├── StudiePlusPlus.Application/   # 📦 DTOs & interfaces
-│       ├── StudiePlusPlus.Infrastructure/# 💾 EF Core & database
-│       ├── StudiePlusPlus.API/           # 🌐 Controllers & config
-│       └── Dockerfile
-│
-└── ✅ tests/                       # Unit & Integration Tests
+└── src/
+    ├── client-app/
+    │   └── studieplusplusgui/         # Vue 3 + Ionic + TypeScript
+    │       └── src/
+    │           ├── views/             # Sider: Home, Schedule, Messages, Profile, Settings
+    │           └── components/
+    │
+    └── server-api/
+        ├── StudiePlusPlus.Domain/     # Entiteter og value objects
+        │   ├── Auth/                  # Login
+        │   ├── Academics/             # Class, Subject
+        │   ├── Messaging/             # Message
+        │   ├── Scheduling/            # WeeklySchedule
+        │   ├── Students/              # Student, Grade, Enrollment
+        │   ├── Teachers/              # Teacher
+        │   ├── Users/                 # User (abstrakt base)
+        │   └── ValueObjects/          # Email
+        │
+        ├── StudiePlusPlus.Application/ # Interfaces, DTOs, handlers
+        │   ├── Abstractions/
+        │   │   ├── Persistence/       # IRepository, ILoginRepository, IUserRepository, ...
+        │   │   └── Security/          # IEncryptionService, IPasswordHasher
+        │   ├── Common/
+        │   │   └── Handlers/          # ReadHandler, WriteHandler (generiske)
+        │   └── Features/              # DTOs og mappers per feature
+        │
+        ├── StudiePlusPlus.Infrastructure/ # EF Core, repositories, services
+        │   ├── Persistence/
+        │   │   ├── AppDbContext.cs
+        │   │   ├── Configurations/    # EF Fluent API per entitet
+        │   │   └── Repositories/      # Konkrete repository-implementeringer
+        │   └── Security/              # AesEncryptionService, PasswordHasher
+        │
+        └── StudiePlusPlus.API/        # Controllers, Program.cs
+            └── Controllers/
+                ├── CrudController.cs  # Generisk base med [Authorize] og logging
+                ├── AuthController.cs  # Login, logout, dev-token
+                ├── StudentsController.cs
+                ├── TeachersController.cs
+                ├── ClassesController.cs
+                ├── SubjectsController.cs
+                ├── WeeklyScheduleController.cs
+                └── MessagesController.cs
 ```
-
-</details>
 
 ---
 
-## 🚀 Quick Start
+## Konfiguration
 
-### 📋 Prerequisites
+`appsettings.json` indeholder nøgler til kryptering og JWT. Disse skal ikke committes til source control i produktion – brug environment variables:
 
 ```bash
-✓ Docker & Docker Compose
-✓ Node.js 18+
-✓ .NET 7+ SDK
-✓ Git
+Encryption__Key=...   dotnet run
+Jwt__Key=...          dotnet run
 ```
 
-### 🏃 Run Everything in One Command
+Generer nøgler:
+```bash
+openssl rand -base64 32
+```
+
+---
+
+## Deploy (server)
 
 ```bash
-docker-compose up --build
+./deploy.sh
 ```
 
-**That's it!** The entire platform will be running at `http://localhost`
+Scriptet stopper eksisterende containere, fjerner det gamle image, bygger nyt og starter i baggrunden.
 
 ---
 
-## ✨ Features
+## Tech stack
 
-<table>
-<tr>
-<td>
-
-### Frontend (Ionic)
-- 📱 Mobile-first responsive design
-- ⚡ Lightning-fast performance
-- 🎨 Beautiful, intuitive UI
-- 🔌 Offline-capable
-- 🔐 Secure authentication
-
-</td>
-<td>
-
-### Backend (ASP.NET)
-- 🏛️ Clean Architecture pattern
-- 🛡️ Enterprise-grade security
-- 📊 RESTful API design
-- 🗄️ Optimized database queries
-- 🧪 100% test coverage
-
-</td>
-</tr>
-</table>
+| Del | Teknologi |
+|---|---|
+| Frontend | Vue 3, TypeScript, Ionic, Capacitor |
+| Backend | ASP.NET Core 8, C# |
+| Database | SQL Server 2022 |
+| ORM | Entity Framework Core 9 |
+| Auth | JWT Bearer |
+| Containerisering | Docker, Docker Compose |
 
 ---
 
-## 🛠️ Tech Stack
+## Elever
 
-<div align="center">
-
-| **Frontend** | **Backend** | **DevOps** |
-|:---:|:---:|:---:|
-| <img src="https://img.shields.io/badge/Ionic-4ABAEF?style=flat&logo=ionic&logoColor=white" /> | <img src="https://img.shields.io/badge/.NET-512BD4?style=flat&logo=.net&logoColor=white" /> | <img src="https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white" /> |
-| <img src="https://img.shields.io/badge/Angular-DD0031?style=flat&logo=angular&logoColor=white" /> | <img src="https://img.shields.io/badge/C%23-239120?style=flat&logo=c-sharp&logoColor=white" /> | <img src="https://img.shields.io/badge/PostgreSQL-336791?style=flat&logo=postgresql&logoColor=white" /> |
-| <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white" /> | <img src="https://img.shields.io/badge/Entity%20Framework-512BD4?style=flat&logo=.net&logoColor=white" /> | <img src="https://img.shields.io/badge/Linux-FCC624?style=flat&logo=linux&logoColor=black" /> |
-
-</div>
-
----
-
-## 📖 Documentation
-
-- 📚 [Getting Started Guide](docs/getting-started.md) _(coming soon)_
-- 🔌 [API Documentation](docs/api.md) _(coming soon)_
-- 🎨 [Design System](docs/design.md) _(coming soon)_
-- 🧪 [Testing Guide](docs/testing.md) _(coming soon)_
-
----
-
-## 🤝 Contributing
-
-We love contributions! Whether it's bug reports, feature requests, or code, all are welcome.
-
-```bash
-# Fork → Clone → Create your feature branch → Commit → Push → PR
-```
-
----
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-<div align="center">
-
-**Made with ❤️ for better education**
-
-[Report Bug](https://github.com/yourusername/studieplusplus/issues) •
-[Request Feature](https://github.com/yourusername/studieplusplus/issues) •
-[View Releases](https://github.com/yourusername/studieplusplus/releases)
-
-</div>
+Kevin Bamwesa & Zilas Jørgensen – Techcollege, H5, 2026
