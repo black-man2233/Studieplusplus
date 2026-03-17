@@ -1,4 +1,3 @@
-import os
 import sys
 import time
 from uptime_kuma_api import UptimeKumaApi, MonitorType
@@ -6,8 +5,6 @@ from uptime_kuma_api import UptimeKumaApi, MonitorType
 KUMA_URL   = "http://uptime-kuma:3001"
 ADMIN_USER = "admin"
 ADMIN_PASS = "admin123!"
-DONE_FILE  = "/data/.setup_done"
-
 MONITORS = [
     dict(
         type=MonitorType.HTTP,
@@ -28,6 +25,12 @@ MONITORS = [
         port=1433,
         interval=60,
     ),
+    dict(
+        type=MonitorType.SQLSERVER,
+        name="SQL Server DB",
+        database_connection_string="Server=sqlserver,1433;Database=StudiePlusPlusDB;User Id=sa;Password=admin123!;TrustServerCertificate=True",
+        interval=60,
+    ),
 ]
 
 
@@ -46,10 +49,6 @@ def connect(retries=30, delay=5):
 
 
 def main():
-    if os.path.exists(DONE_FILE):
-        print("Setup marker found — nothing to do.")
-        return
-
     api = connect()
     try:
         # Create admin account (only succeeds on a fresh instance)
@@ -70,10 +69,6 @@ def main():
             else:
                 api.add_monitor(**m)
                 print(f"  added: {m['name']}")
-
-        # Write marker so we don't run again
-        with open(DONE_FILE, "w") as f:
-            f.write("done\n")
 
         print("Setup complete.")
     finally:

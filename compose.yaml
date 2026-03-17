@@ -1,5 +1,6 @@
 services:
   sqlserver:
+    container_name: spp-sqlserver
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
       ACCEPT_EULA: "Y"
@@ -14,6 +15,7 @@ services:
       start_period: 30s
 
   studieplusplus.api:
+    container_name: spp-api
     image: studieplusplus.api
     build:
       context: .
@@ -31,6 +33,7 @@ services:
         condition: service_started
 
   uptime-kuma:
+    container_name: spp-uptime-kuma
     image: louislam/uptime-kuma:1
     ports:
       - "5170:3001"
@@ -39,6 +42,7 @@ services:
     restart: unless-stopped
 
   uptime-kuma-setup:
+    container_name: spp-uptime-kuma-setup
     build:
       context: ./docker/uptime-kuma-setup
     depends_on:
@@ -48,6 +52,7 @@ services:
     restart: "no"
 
   seq:
+    container_name: spp-seq
     image: datalust/seq:latest
     ports:
       - "5171:80"
