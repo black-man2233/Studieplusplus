@@ -1,0 +1,5 @@
+# Ignore runtime files, but track kuma.db once you've configured it
+*
+!.gitkeep
+!.gitignore
+!kuma.db

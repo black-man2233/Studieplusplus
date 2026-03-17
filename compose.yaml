@@ -1,19 +1,21 @@
 services:
   sqlserver:
+    container_name: spp-sqlserver
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
       ACCEPT_EULA: "Y"
-      SA_PASSWORD: "YourStrong@Passw0rd"
+      SA_PASSWORD: "admin123!"
     ports:
       - "1433:1433"
     healthcheck:
-      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "YourStrong@Passw0rd", "-Q", "SELECT 1", "-No"]
+      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "admin123!", "-Q", "SELECT 1", "-No"]
       interval: 10s
       timeout: 5s
       retries: 10
       start_period: 30s
 
   studieplusplus.api:
+    container_name: spp-api
     image: studieplusplus.api
     build:
       context: .
@@ -23,6 +25,43 @@ services:
       - "5169:8081"
     environment:
       ASPNETCORE_ENVIRONMENT: Development
+      Seq__ServerUrl: "http://seq:5341"
     depends_on:
       sqlserver:
         condition: service_healthy
+      seq:
+        condition: service_started
+
+  uptime-kuma:
+    container_name: spp-uptime-kuma
+    image: louislam/uptime-kuma:1
+    ports:
+      - "5170:3001"
+    volumes:
+      - ./docker/uptime-kuma-data:/app/data
+    restart: unless-stopped
+
+  uptime-kuma-setup:
+    container_name: spp-uptime-kuma-setup
+    build:
+      context: ./docker/uptime-kuma-setup
+    depends_on:
+      - uptime-kuma
+    volumes:
+      - ./docker/uptime-kuma-data:/data
+    restart: "no"
+
+  seq:
+    container_name: spp-seq
+    image: datalust/seq:latest
+    ports:
+      - "5171:80"
+    environment:
+      ACCEPT_EULA: "Y"
+      SEQ_FIRSTRUN_ADMINPASSWORD: "admin123!"
+    volumes:
+      - seq-data:/data
+    restart: unless-stopped
+
+volumes:
+  seq-data:
