@@ -75,7 +75,7 @@
             <ion-accordion value="skole">
               <ion-item slot="header" class="accordion-header" lines="none">
                 <ion-icon :icon="bookOutline" class="header-icon" />
-                <ion-label>Skole Forloeb</ion-label>
+                <ion-label>Skole Forløb</ion-label>
               </ion-item>
 
               <div class="accordion-content ion-padding" slot="content">
@@ -196,25 +196,25 @@ const schoolPath = [
   },
   {
     period: "2024 - 2025",
-    title: "Grundforloeb 2 - IT & programmering",
+    title: "Grundforløb 2 - IT & programmering",
   },
   {
     period: "2023 - 2024",
-    title: "Introforloeb i softwareudvikling",
+    title: "Introforløb i softwareudvikling",
   },
 ];
 
 const notes = [
-  "Projektstyring: afleveringskrav gennemgaet",
+  "Projektstyring: afleveringskrav gennemgået",
   "Systemudvikling: repeter API design til torsdag",
-  "Gruppearbejde: moede kl. 13:15 i lokale B-204",
+  "Gruppearbejde: møde kl. 13:15 i lokale B-204",
 ];
 
 const employer = {
   name: "Nordic Dev Solutions",
   role: "Praktikplads - Junior Developer",
   details:
-    "Arbejder med frontend-opgaver i Vue og deltager i sprint planlaegning. Fokus paa kvalitet, test og samarbejde i teamet.",
+    "Arbejder med frontend-opgaver i Vue og deltager i sprint planlægning. Fokus på kvalitet, test og samarbejde i teamet.",
 };
 </script>
 
