@@ -1,14 +1,13 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
+using System;
+using Microsoft.Extensions.Logging;
 using StudiePlusPlus.Application.Abstractions.Persistence;
 using StudiePlusPlus.Domain.Scheduling;
-using StudiePlusPlus.Domain.Teachers;
 
 namespace StudiePlusPlus.Infrastructure.Persistence.Repositories;
 
 public class WeeklyScheduleRepository : Repository<WeeklySchedule, Guid>, IWeeklyScheduleRepository
 {
-    public WeeklyScheduleRepository(AppDbContext db) : base(db)
+    public WeeklyScheduleRepository(AppDbContext db, ILoggerFactory loggerFactory) : base(db, loggerFactory)
     {
     }
 }

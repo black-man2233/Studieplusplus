@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
+using Serilog;
 using StudiePlusPlus.Infrastructure;
 using StudiePlusPlus.Infrastructure.Persistence;
 
@@ -18,6 +19,11 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+
+        builder.Host.UseSerilog((context, config) => config
+            .ReadFrom.Configuration(context.Configuration)
+            .WriteTo.Console()
+            .WriteTo.Seq(context.Configuration["Seq:ServerUrl"] ?? "http://seq:5341"));
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
@@ -83,6 +89,8 @@ public class Program
                 .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient)
                 .WithClassicLayout();
         });
+
+        app.UseSerilogRequestLogging();
 
         app.UseHttpsRedirection();
         app.UseAuthentication();
