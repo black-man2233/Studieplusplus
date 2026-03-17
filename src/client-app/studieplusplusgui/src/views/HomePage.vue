@@ -1,9 +1,5 @@
 <template>
   <ion-page class="home-page">
-    <ion-header>
-
-    </ion-header>
-
     <ion-content :fullscreen="true" class="home-content">
       <div class="page-shell">
         <section class="hero">
@@ -58,7 +54,6 @@
 <script setup lang="ts">
 import {
   IonPage,
-  IonHeader,
   IonContent,
   IonCol,
   IonGrid,
@@ -123,6 +118,8 @@ const mealItems = ["Rød grød med fløde", "Frisk salat", "Fuldkornsbrød"];
 }
 
 .page-shell {
+  max-width: 1220px;
+  margin: 0 auto;
   padding: 24px 12px 18px;
 }
 
@@ -187,7 +184,7 @@ ion-col {
 }
 
 .slider-wrap {
-  padding: 4px 8px 8px;
+  padding: 6px 10px 10px;
   margin-bottom: 8px;
   overflow: hidden;
   border: 1px solid rgba(129, 145, 190, 0.2);
@@ -358,5 +355,38 @@ ion-col {
 
 :deep(.overview-grid ion-item ion-label) {
   color: #e6edff !important;
+}
+
+@media (min-width: 992px) {
+  .page-shell {
+    padding: 34px 18px 26px;
+  }
+
+  .hero {
+    padding: 8px 12px 14px;
+  }
+
+  .hero-title {
+    font-size: clamp(2rem, 3.1vw, 2.7rem);
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .slider-wrap {
+    margin-bottom: 12px;
+    padding: 10px 12px 12px;
+    border-radius: 22px;
+  }
+
+  .card-slide {
+    width: min(30vw, 368px);
+    padding: 8px 4px 12px;
+  }
+
+  ion-col {
+    padding: 10px;
+  }
 }
 </style>

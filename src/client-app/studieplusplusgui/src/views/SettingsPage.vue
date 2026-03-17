@@ -145,7 +145,7 @@ const SettingsModalComponent = defineAsyncComponent(
 
 const profileOptions = ['Rediger profil', 'Skift profilbillede', 'Privatlivsindstillinger'];
 const soundOptions = ['Notifikationslyde', 'Ringetone', 'Vibration'];
-const themeOptions = ['Lyst tema', 'Moerkt tema', 'Foelg system'];
+const themeOptions = ['Lyst tema', 'Mørkt tema', 'Følg system'];
 const loginOptions = ['Skift adgangskode', 'To-faktor autentificering', 'Log ud'];
 
 </script>
