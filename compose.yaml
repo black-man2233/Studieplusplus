@@ -32,11 +32,29 @@ services:
       seq:
         condition: service_started
 
+  studieplusplus.app:
+    container_name: spp-app
+    build:
+      context: src/client-app/studieplusplusgui
+      dockerfile: Dockerfile
+    ports:
+      - "5172:80"
+    restart: unless-stopped
+
+  dashboard:
+    container_name: spp-dashboard
+    build:
+      context: docker/dashboard
+      dockerfile: Dockerfile
+    ports:
+      - "5170:80"
+    restart: unless-stopped
+
   uptime-kuma:
     container_name: spp-uptime-kuma
     image: louislam/uptime-kuma:1
     ports:
-      - "5170:3001"
+      - "5173:3001"
     volumes:
       - ./docker/uptime-kuma-data:/app/data
     restart: unless-stopped

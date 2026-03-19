@@ -1,0 +1,140 @@
+.login-page,
+.login-content {
+  --background: linear-gradient(160deg, #f6f9ff 0%, #edf3ff 55%, #f9fcff 100%);
+}
+
+.login-shell {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 24px;
+  padding: 40px 22px 30px;
+}
+
+.login-header {
+  text-align: center;
+}
+
+.login-kicker {
+  margin: 0 0 8px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #d9c9ae;
+}
+
+.login-title {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 900;
+  color: #dce9ff;
+}
+
+.login-subtitle {
+  margin: 8px 0 0;
+  font-size: 0.98rem;
+  color: #5e7595;
+}
+
+.method-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.method-card {
+  width: min(100%, 430px);
+  min-height: 76px;
+  border: 0;
+  border-radius: 16px;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(19, 40, 74, 0.18);
+  transition: transform 0.12s ease, filter 0.2s ease;
+}
+
+.method-card:active {
+  transform: scale(0.99);
+}
+
+.method-card:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
+.method-card.unilogin {
+  background: linear-gradient(120deg, #0c2f69 0%, #0f4ea8 100%);
+}
+
+.method-card.direkte {
+  background: linear-gradient(120deg, #1b4a85 0%, #2a6eb5 100%);
+}
+
+.method-card.mitid {
+  background: linear-gradient(120deg, #005ea8 0%, #0a76cf 100%);
+}
+
+.method-badge {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.2);
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+
+.method-text-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.method-title {
+  font-size: 1.02rem;
+  font-weight: 800;
+}
+
+.method-subtitle {
+  font-size: 0.83rem;
+  opacity: 0.9;
+}
+
+.dev-login-wrap {
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
+  padding-top: 12px;
+}
+
+.dev-login-btn {
+  border: 1px solid rgba(173, 196, 228, 0.5);
+  background: rgba(18, 36, 62, 0.35);
+  color: #d6e5ff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  border-radius: 999px;
+  height: 30px;
+  padding: 0 14px;
+}
+
+@media (min-width: 768px) {
+  .login-shell {
+    max-width: 470px;
+    margin: 0 auto;
+    padding-top: 54px;
+  }
+}

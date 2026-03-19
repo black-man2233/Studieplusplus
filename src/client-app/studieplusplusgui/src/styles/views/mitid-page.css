@@ -1,0 +1,65 @@
+.provider-page,
+.provider-content {
+  --background: linear-gradient(160deg, #f6f9ff 0%, #edf3ff 55%, #f9fcff 100%);
+}
+
+.provider-shell {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 18px;
+  padding: 36px 22px;
+}
+
+.provider-header {
+  text-align: center;
+}
+
+.provider-kicker {
+  margin: 0 0 8px;
+  color: #d9c9ae;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.provider-title {
+  margin: 0;
+  color: #dce9ff;
+  font-size: 2rem;
+  font-weight: 900;
+}
+
+.provider-subtitle {
+  margin: 8px 0 0;
+  color: #b6c8e4;
+}
+
+.provider-card {
+  width: min(100%, 430px);
+  margin: 0 auto;
+  border-radius: 16px;
+  background: rgba(20, 35, 58, 0.72);
+  border: 1px solid rgba(145, 167, 199, 0.35);
+  box-shadow: 0 14px 28px rgba(10, 20, 35, 0.32);
+  padding: 16px;
+}
+
+.provider-copy {
+  margin: 0 0 14px;
+  color: #cfddf3;
+  font-size: 0.95rem;
+}
+
+.provider-btn {
+  --background: linear-gradient(120deg, #005ea8 0%, #0a76cf 100%);
+  --border-radius: 12px;
+  height: 50px;
+  font-weight: 700;
+}
+
+.back-btn {
+  margin-top: 8px;
+}

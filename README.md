@@ -4,6 +4,10 @@ Et alternativ til Studie+ – bygget af elever på Techcollege som en del af det
 
 Systemet består af et ASP.NET Core API, en SQL Server database og en Vue 3 + Ionic app.
 
+Demo : https://dashboard-spp.bamwesa.org/
+every username: admin
+every password admin123 || admin123!
+
 ---
 
 ## Kom i gang

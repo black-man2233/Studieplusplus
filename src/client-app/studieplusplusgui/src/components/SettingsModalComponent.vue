@@ -13,7 +13,7 @@
       </ion-header>
       <ion-content class="ion-padding">
         <ion-list inset>
-          <ion-item v-for="option in options" :key="option" button detail>
+          <ion-item v-for="option in options" :key="option" button detail @click="selectOption(option)">
             <ion-label>{{ option }}</ion-label>
           </ion-item>
         </ion-list>
@@ -48,6 +48,7 @@ type ModalRef = {
 
 export default defineComponent({
   name: 'SettingsModalComponent',
+  emits: ['option-select'],
   components: {
     IonButton,
     IonIcon,
@@ -70,16 +71,21 @@ export default defineComponent({
       required: true,
     },
   },
-  setup() {
+  setup(_, { emit }) {
     const triggerId = `settings-modal-${Math.random().toString(36).slice(2)}`;
     const modal = ref<ModalRef | null>(null);
 
     const dismiss = () => modal.value?.$el?.dismiss(null, 'cancel');
+    const selectOption = (option: string) => {
+      emit('option-select', option);
+      dismiss();
+    };
 
     return {
       chevronForwardOutline,
       dismiss,
       modal,
+      selectOption,
       triggerId,
     };
   },

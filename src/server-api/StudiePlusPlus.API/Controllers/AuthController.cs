@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -41,6 +42,54 @@ public class AuthController : ControllerBase
         _configuration = configuration;
         _env           = env;
         _logger        = logger;
+    }
+
+    [HttpPost("loginmultiple")]
+    public async Task<IActionResult> LoginMultiple([FromBody] List<LoginRequest> requests, CancellationToken ct)
+    {
+        var results = new List<object>();
+
+        foreach (var item in requests)
+        {
+            var result = await AuthenticateAsync(item, ct);
+
+            if (!result.Success)
+            {
+                results.Add(new
+                {
+                    email = item.Email,
+                    success = false,
+                    error = "Invalid email or password."
+                });
+            }
+            else
+            {
+                results.Add(new
+                {
+                    email = item.Email,
+                    success = true,
+                    token = GenerateToken(result.UserId!.Value.ToString(), result.Email!)
+                });
+            }
+        }
+
+        return Ok(results);
+    }
+
+    private async Task<(bool Success, Guid? UserId, string? Email)> AuthenticateAsync(LoginRequest request, CancellationToken ct)
+    {
+        var user = await _users.GetByEmailAsync(request.Email, ct);
+        if (user is null)
+            return (false, null, null);
+
+        var login = await _logins.GetByUserIdAsync(user.Id, ct);
+        if (login is null)
+            return (false, null, null);
+
+        if (!_hasher.Verify(login.PasswordHash, request.Password))
+            return (false, null, null);
+
+        return (true, user.Id, user.Email.Value);
     }
 
     /// <summary>

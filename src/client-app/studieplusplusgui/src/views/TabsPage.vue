@@ -1,37 +1,50 @@
   <template>
     <ion-page>
-      <ion-menu content-id="main-content" class="desktop-menu" type="overlay" side="start">
-        <ion-header>
-          <ion-toolbar>
-            <ion-title>Menu</ion-title>
-          </ion-toolbar>
-        </ion-header>
+      <nav class="desktop-sidebar" :class="{ expanded: isSidebarExpanded }">
+        <div class="sidebar-header">
+          <button class="sidebar-toggle" @click="toggleSidebar" aria-label="Toggle sidebar">
+            <ion-icon :icon="menuOutline" />
+          </button>
+        </div>
 
-        <ion-content>
-          <ion-list>
-            <ion-item router-link="/tabs/home" router-direction="root">Home</ion-item>
-            <ion-item router-link="/tabs/schedule" router-direction="root">Schedule</ion-item>
-            <ion-item router-link="/tabs/messages" router-direction="root">Messages</ion-item>
-            <ion-item router-link="/tabs/profile" router-direction="root">Profile</ion-item>
-            <ion-item router-link="/tabs/settings" router-direction="root">Settings</ion-item>
-          </ion-list>
-        </ion-content>
-      </ion-menu>
+        <ul class="sidebar-nav">
+          <li>
+            <router-link to="/tabs/home" class="nav-item" :title="!isSidebarExpanded ? 'Hjem' : ''">
+              <ion-icon :icon="homeOutline" class="nav-icon" />
+              <span class="nav-label">Hjem</span>
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/tabs/schedule" class="nav-item" :title="!isSidebarExpanded ? 'Skema' : ''">
+              <ion-icon :icon="calendarOutline" class="nav-icon" />
+              <span class="nav-label">Skema</span>
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/tabs/messages" class="nav-item" :title="!isSidebarExpanded ? 'Beskeder' : ''">
+              <ion-icon :icon="chatbubbleEllipsesOutline" class="nav-icon" />
+              <span class="nav-label">Beskeder</span>
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/tabs/profile" class="nav-item" :title="!isSidebarExpanded ? 'Profil' : ''">
+              <ion-icon :icon="personOutline" class="nav-icon" />
+              <span class="nav-label">Profil</span>
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/tabs/settings" class="nav-item" :title="!isSidebarExpanded ? 'Indstillinger' : ''">
+              <ion-icon :icon="settingsOutline" class="nav-icon" />
+              <span class="nav-label">Indstillinger</span>
+            </router-link>
+          </li>
+        </ul>
+      </nav>
 
-      <ion-header class="menu-header">
-        <ion-toolbar>
-          <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
-          <ion-buttons slot="start">
-            <ion-menu-button></ion-menu-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
+      <ion-tabs id="main-content" class="desktop-tabs">
+        <ion-router-outlet :animated="false"></ion-router-outlet>
 
-      <ion-tabs id="main-content">
-        <ion-router-outlet></ion-router-outlet>
-
-        <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
-        <ion-tab-bar :slot="'bottom'" class="mobile-tabs">
+        <ion-tab-bar v-bind="{ slot: 'bottom' }" class="mobile-tabs">
           <ion-tab-button tab="messages" href="/tabs/messages">
             <ion-icon aria-hidden="true" :icon="chatbubbleEllipsesOutline" />
             <ion-label>Beskeder</ion-label>
@@ -64,22 +77,14 @@
 <script setup lang="ts">
 import {
   IonPage,
-  IonMenu,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-  IonList,
-  IonItem,
   IonTabs,
   IonRouterOutlet,
   IonTabBar,
   IonTabButton,
   IonLabel,
   IonIcon,
-  IonButtons,
-  IonMenuButton,
 } from '@ionic/vue';
+import { ref } from 'vue';
 
 import {
   calendarOutline,
@@ -87,5 +92,16 @@ import {
   homeOutline,
   personOutline,
   settingsOutline,
+  menuOutline,
 } from 'ionicons/icons';
+
+const isSidebarExpanded = ref(true);
+
+const toggleSidebar = () => {
+  isSidebarExpanded.value = !isSidebarExpanded.value;
+};
 </script>
+
+<style scoped>
+@import "../styles/views/tabs-page.css";
+</style>
