@@ -35,6 +35,7 @@ function asRecord(value: unknown): Record<string, unknown> {
   return typeof value === 'object' && value !== null ? (value as Record<string, unknown>) : {};
 }
 
+// Finder den første ikke-tomme tekst blandt flere mulige feltnavne.
 function pickString(record: Record<string, unknown>, keys: string[]): string {
   for (const key of keys) {
     const value = record[key];
@@ -184,7 +185,7 @@ export async function getNormalizedMessageChats(): Promise<NormalizedChat[]> {
     try {
       rows = await getConversationMessages(currentStudentId, partner.id);
     } catch {
-      // Spring en fejlende samtale over, saa resten stadig kan vises.
+      // Spring en fejlende samtale over, så resten stadig kan vises.
       continue;
     }
 
@@ -195,7 +196,7 @@ export async function getNormalizedMessageChats(): Promise<NormalizedChat[]> {
     for (const row of rows) {
       const record = asRecord(row);
 
-      // Stoet flere backend-feltnavne og map til en stabil frontend-model.
+      // Støt flere backend-feltnavne og map til en stabil frontend-model.
       const conversationKey = pickString(record, [
         'conversationId',
         'threadId',

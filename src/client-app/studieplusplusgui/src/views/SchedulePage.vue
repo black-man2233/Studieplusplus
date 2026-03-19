@@ -134,7 +134,7 @@ const getMondayOfCurrentWeek = (): Date => {
 const buildDateFromTemplate = (weekStart: Date, targetDayOfWeek: number, templateIso: string): Date => {
   const templateDate = new Date(templateIso);
   const eventDate = new Date(weekStart);
-  // Begraens dag-vaerdien, saa visning ikke bryder ved ugyldige backend-data.
+  // Begræns dag-værdien, så visning ikke bryder ved ugyldige backend-data.
   const normalizedDay = Math.min(7, Math.max(1, targetDayOfWeek));
   eventDate.setDate(eventDate.getDate() + (normalizedDay - 1));
   eventDate.setHours(templateDate.getHours(), templateDate.getMinutes(), 0, 0);
