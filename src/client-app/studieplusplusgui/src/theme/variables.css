@@ -1,6 +1,3 @@
-/* For information on how to create your own theme, please refer to:
-http://ionicframework.com/docs/theming/ */
-
 @media (min-width: 992px) {
   ion-tab-bar.mobile-tabs {
     display: none !important;

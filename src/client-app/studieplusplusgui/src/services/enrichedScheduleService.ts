@@ -8,6 +8,7 @@ export interface EnrichedScheduleEntry extends WeeklyScheduleEntry {
   lessonName: string;
 }
 
+// Stabil hash giver samme lektionsnavn for samme entry uden ekstra backend-felt.
 function hashToIndex(seed: string, modulo: number): number {
   if (modulo <= 0) {
     return 0;
@@ -40,6 +41,7 @@ function getLessonName(entry: WeeklyScheduleEntry, teacher?: Teacher): string {
 }
 
 export async function getEnrichedWeeklySchedule(): Promise<EnrichedScheduleEntry[]> {
+  // Hent begge datakilder samtidig, og fortsæt selv hvis laerer-opslag fejler.
   const [weeklySchedule, teachers] = await Promise.all([
     getWeeklySchedule(),
     getTeachers().catch(() => [] as Teacher[]),

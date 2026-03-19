@@ -30,6 +30,7 @@ function makeUrl(baseUrl: string, path: string): string {
 
 function getRequestUrlCandidates(path: string): string[] {
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  // Proev backend-URL foerst, derefter relativ sti til proxy/native miljoeer.
   const candidates = [
     makeUrl(API_BASE_URL, normalizedPath),
     normalizedPath,
@@ -38,14 +39,71 @@ function getRequestUrlCandidates(path: string): string[] {
   return [...new Set(candidates)];
 }
 
+function normalizeDanishText(value: string): string {
+  return value.replace(/ae|oe|aa/gi, (match) => {
+    const lower = match.toLowerCase();
+    const mapped = lower === 'ae' ? 'æ' : lower === 'oe' ? 'ø' : 'å';
+
+    if (match === match.toUpperCase()) {
+      return mapped.toUpperCase();
+    }
+
+    if (match[0] === match[0].toUpperCase()) {
+      return mapped.toUpperCase();
+    }
+
+    return mapped;
+  });
+}
+
+function shouldNormalizeString(value: string, key?: string): boolean {
+  // Undgaa at aendre tekniske felter, hvor ae/oe/aa kan have betydning.
+  const technicalKeyPattern = /(id|email|token|url|uri|path|code|identifier)/i;
+  if (key && technicalKeyPattern.test(key)) {
+    return false;
+  }
+
+  if (value.includes('@')) {
+    return false;
+  }
+
+  if (value.includes('://')) {
+    return false;
+  }
+
+  return true;
+}
+
+function normalizeDanishPayload<T>(value: T, key?: string): T {
+  if (typeof value === 'string') {
+    return (shouldNormalizeString(value, key) ? normalizeDanishText(value) : value) as T;
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => normalizeDanishPayload(item)) as T;
+  }
+
+  if (value && typeof value === 'object') {
+    const normalizedEntries = Object.entries(value as Record<string, unknown>).map(([entryKey, nestedValue]) => [
+      entryKey,
+      normalizeDanishPayload(nestedValue, entryKey),
+    ]);
+
+    return Object.fromEntries(normalizedEntries) as T;
+  }
+
+  return value;
+}
+
 async function parseResponsePayload(response: Response): Promise<unknown> {
   const contentType = response.headers.get('content-type') ?? '';
   if (contentType.includes('application/json')) {
-    return response.json();
+    const payload = await response.json();
+    return normalizeDanishPayload(payload);
   }
 
   const text = await response.text();
-  return text.length > 0 ? text : null;
+  return text.length > 0 ? normalizeDanishText(text) : null;
 }
 
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
@@ -67,6 +125,7 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   const urlCandidates = getRequestUrlCandidates(path);
   let lastError: unknown = null;
 
+  // Proev alle URL-kandidater, saa samme klient virker i flere setups.
   for (const url of urlCandidates) {
     try {
       const response = await fetch(url, {

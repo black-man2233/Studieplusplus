@@ -5,7 +5,7 @@
         <header class="login-header">
           <p class="login-kicker">Studie+Plus</p>
           <h1 class="login-title">Log ind</h1>
-          <p class="login-subtitle">Vaelg loginmetode for at fortsaette</p>
+          <p class="login-subtitle">Vælg loginmetode for at fortsætte</p>
         </header>
 
         <section class="method-section" aria-label="Login metoder">

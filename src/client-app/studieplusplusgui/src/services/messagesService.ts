@@ -184,6 +184,7 @@ export async function getNormalizedMessageChats(): Promise<NormalizedChat[]> {
     try {
       rows = await getConversationMessages(currentStudentId, partner.id);
     } catch {
+      // Spring en fejlende samtale over, saa resten stadig kan vises.
       continue;
     }
 
@@ -194,6 +195,7 @@ export async function getNormalizedMessageChats(): Promise<NormalizedChat[]> {
     for (const row of rows) {
       const record = asRecord(row);
 
+      // Stoet flere backend-feltnavne og map til en stabil frontend-model.
       const conversationKey = pickString(record, [
         'conversationId',
         'threadId',
