@@ -69,7 +69,7 @@ function goTo(path: '/login/unilogin' | '/login/mitid' | '/login/direkte') {
 }
 
 function handleDevLogin() {
-  const ok = login('dev@studieplus.local', 'dev-login');
+  const ok = login('dev@studieplus.local', 'dev-login', 'direct');
   if (ok) {
     router.replace('/tabs/home');
   }

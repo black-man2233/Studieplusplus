@@ -1,14 +1,19 @@
 import { ref } from 'vue';
+import {
+  AUTH_STATE_KEY,
+  clearStoredAccessToken,
+  clearStoredLoginContext,
+  setStoredLoginContext,
+} from '@/services/authStorage';
 
-const AUTH_KEY = 'spp_auth';
-
-const isLoggedIn = ref<boolean>(!!localStorage.getItem(AUTH_KEY));
+const isLoggedIn = ref<boolean>(!!localStorage.getItem(AUTH_STATE_KEY));
 
 export function useAuth() {
-  function login(email: string, password: string): boolean {
+  function login(email: string, password: string, method: string = 'direct'): boolean {
     // Placeholder — swap out for a real API call later
     if (email.trim() && password.trim()) {
-      localStorage.setItem(AUTH_KEY, '1');
+      localStorage.setItem(AUTH_STATE_KEY, '1');
+      setStoredLoginContext(method, email.trim());
       isLoggedIn.value = true;
       return true;
     }
@@ -16,7 +21,9 @@ export function useAuth() {
   }
 
   function logout() {
-    localStorage.removeItem(AUTH_KEY);
+    localStorage.removeItem(AUTH_STATE_KEY);
+    clearStoredAccessToken();
+    clearStoredLoginContext();
     isLoggedIn.value = false;
   }
 

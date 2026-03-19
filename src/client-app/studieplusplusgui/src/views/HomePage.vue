@@ -60,11 +60,13 @@ import {
   IonRow,
   IonLabel,
   IonImg,
+  onIonViewDidEnter,
 } from "@ionic/vue";
 
-import { defineAsyncComponent } from "vue";
+import { defineAsyncComponent, onMounted, ref } from "vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Pagination } from "swiper/modules";
+import { getEnrichedWeeklySchedule } from "@/services/enrichedScheduleService";
 
 const HomePageCards = defineAsyncComponent(() => import("@/components/HomePageCard.vue"));
 
@@ -110,11 +112,53 @@ const homeworkItems = [
   "Upload refleksionsnotat",
 ];
 
-const scheduleItems = [
-  "08:15 Projektstyring",
-  "10:00 Systemudvikling",
-  "12:30 Gruppearbejde",
-];
+const scheduleItems = ref<string[]>(["Henter dagens skema..."]);
+
+function getCurrentWeekday(): number {
+  const now = new Date();
+  const day = now.getDay();
+  return day === 0 ? 7 : day;
+}
+
+function toTimeLabel(isoDate: string): string {
+  const date = new Date(isoDate);
+  if (Number.isNaN(date.getTime())) {
+    return "--:--";
+  }
+
+  return date.toLocaleTimeString("da-DK", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+async function loadTodaySchedule() {
+  try {
+    const weeklySchedule = await getEnrichedWeeklySchedule();
+
+    const today = getCurrentWeekday();
+
+    const todaysItems = weeklySchedule
+      .filter((entry) => entry.dayOfTheWeek === today)
+      .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime())
+      .map((entry) => {
+        return `${toTimeLabel(entry.startTime)} ${entry.lessonName} - ${entry.teacherName}`;
+      });
+
+    scheduleItems.value = todaysItems.length > 0 ? todaysItems : ["Ingen lektioner i dag"];
+  } catch (error) {
+    console.error("Failed to load today's schedule", error);
+    scheduleItems.value = ["Kunne ikke hente dagens skema"];
+  }
+}
+
+onMounted(() => {
+  void loadTodaySchedule();
+});
+
+onIonViewDidEnter(() => {
+  void loadTodaySchedule();
+});
 
 const mealItems = ["Rød grød med fløde", "Frisk salat", "Fuldkornsbrød"];
 </script>

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +18,15 @@ public sealed class UserRepository : IUserRepository
     {
         _db = db;
         _logger = logger;
+    }
+
+    public async Task<IReadOnlyList<User>> GetAllAsync(CancellationToken ct = default)
+    {
+        _logger.LogDebug("DB lookup all users");
+
+        return await _db.Users
+            .AsNoTracking()
+            .ToListAsync(ct);
     }
 
     public async Task<User> GetByEmailAsync(string email, CancellationToken ct = default)

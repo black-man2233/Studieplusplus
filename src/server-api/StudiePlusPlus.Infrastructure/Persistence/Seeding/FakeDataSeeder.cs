@@ -12,6 +12,7 @@ using StudiePlusPlus.Domain.Students;
 using StudiePlusPlus.Domain.Teachers;
 using StudiePlusPlus.Domain.Users;
 using StudiePlusPlus.Domain.ValueObjects;
+using StudiePlusPlus.Infrastructure.Security;
 
 namespace StudiePlusPlus.Infrastructure.Persistence.Seeding;
 
@@ -21,6 +22,7 @@ public static class FakeDataSeeder
     {
         if (context.Users.Any() || context.Classes.Any() || context.Subjects.Any())
         {
+            EnsureSeededLoginPasswords(context, logger);
             logger.LogInformation("Skipping fake data seeding because data already exists.");
             return;
         }
@@ -247,22 +249,59 @@ public static class FakeDataSeeder
     private static List<Login> CreateLogins(IReadOnlyList<Student> students, IReadOnlyList<Teacher> teachers)
     {
         var logins = new List<Login>(students.Count + teachers.Count);
+        var passwordHasher = new PasswordHasher();
 
         foreach (var student in students)
         {
             var loginId = Guid.NewGuid();
             student.Update(student.FirstName, student.LastName, student.Email, loginId);
-            logins.Add(new Login(loginId, student.Id, Convert.ToBase64String(Guid.NewGuid().ToByteArray())));
+            var seededPassword = BuildSeedPassword(student.Email.Value);
+            logins.Add(new Login(loginId, student.Id, passwordHasher.Hash(seededPassword)));
         }
 
         foreach (var teacher in teachers)
         {
             var loginId = Guid.NewGuid();
             teacher.Update(teacher.FirstName, teacher.LastName, teacher.Email, loginId, teacher.Specializations);
-            logins.Add(new Login(loginId, teacher.Id, Convert.ToBase64String(Guid.NewGuid().ToByteArray())));
+            var seededPassword = BuildSeedPassword(teacher.Email.Value);
+            logins.Add(new Login(loginId, teacher.Id, passwordHasher.Hash(seededPassword)));
         }
 
         return logins;
+    }
+
+    private static void EnsureSeededLoginPasswords(AppDbContext context, ILogger logger)
+    {
+        var passwordHasher = new PasswordHasher();
+        var loginsById = context.Logins.ToDictionary(login => login.Id);
+        var seededUsers = context.Users
+            .Where(user => user.LoginId != Guid.Empty && user.Email.Value.EndsWith("@studieplusplus.local", StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        var updatedCount = 0;
+
+        foreach (var user in seededUsers)
+        {
+            if (!loginsById.TryGetValue(user.LoginId, out var login))
+            {
+                continue;
+            }
+
+            var seededPassword = BuildSeedPassword(user.Email.Value);
+            if (passwordHasher.Verify(login.PasswordHash, seededPassword))
+            {
+                continue;
+            }
+
+            login.UpdatePassword(passwordHasher.Hash(seededPassword));
+            updatedCount++;
+        }
+
+        if (updatedCount > 0)
+        {
+            context.SaveChanges();
+            logger.LogInformation("Updated seeded login passwords for {Count} users.", updatedCount);
+        }
     }
 
     private static string ToGradeLabel(decimal score)
@@ -290,6 +329,12 @@ public static class FakeDataSeeder
         var normalizedFirstName = NormalizeForEmail(firstName);
         var normalizedLastName = NormalizeForEmail(lastName);
         return $"{normalizedFirstName}.{normalizedLastName}.{role}{index + 1}@studieplusplus.local";
+    }
+
+    private static string BuildSeedPassword(string email)
+    {
+        var localPart = email.Split('@', 2)[0];
+        return $"{localPart}#2026!";
     }
 
     private static string NormalizeForEmail(string input)
