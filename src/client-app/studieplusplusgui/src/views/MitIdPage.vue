@@ -5,12 +5,12 @@
         <header class="provider-header">
           <p class="provider-kicker">Studie+Plus</p>
           <h1 class="provider-title">MitID</h1>
-          <p class="provider-subtitle">MitID support er midlertidigt utilgaengelig</p>
+          <p class="provider-subtitle">MitID support er midlertidigt utilgængelig</p>
         </header>
 
         <section class="provider-card">
           <p class="provider-copy">
-            MitID login er ikke tilgaengelig i appen lige nu.
+            MitID login er ikke tilgængelig i appen lige nu.
           </p>
 
           <ion-button expand="block" class="provider-btn" @click="showUnavailable = true">

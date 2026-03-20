@@ -11,6 +11,14 @@ export default defineConfig({
     vue(),
     legacy()
   ],
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5168',
+        changeOrigin: true,
+      },
+    },
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

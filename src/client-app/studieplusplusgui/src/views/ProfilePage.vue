@@ -26,13 +26,15 @@
             />
           </ion-avatar>
 
-          <h1 class="profile-name">Kevin</h1>
-          <p class="profile-education">Datateknikker med speciale i programmering</p>
+          <h1 class="profile-name">{{ profileName }}</h1>
+          <p class="profile-education">{{ profileEducation }}</p>
 
           <ion-chip class="profile-chip">
             <ion-icon :icon="schoolOutline" class="chip-icon" />
-            <ion-label>H5PD010126</ion-label>
+            <ion-label>{{ profileCode }}</ion-label>
           </ion-chip>
+
+          <p v-if="profileMessage" class="profile-message">{{ profileMessage }}</p>
 
           <div class="quick-stats">
             <div class="stat-card">
@@ -150,7 +152,11 @@ import {
   IonList,
   IonChip,
   IonIcon,
+  onIonViewDidEnter,
 } from "@ionic/vue";
+import { computed, ref } from "vue";
+import { getStoredLoginIdentifier, getStoredLoginMethod } from "@/services/authStorage";
+import { findStudentByLoginIdentifier, getStudents } from "@/services/studentsService";
 
 import {
   personOutline,
@@ -164,7 +170,16 @@ import {
   bookOutline,
 } from "ionicons/icons";
 
-const personalInfo = [
+const defaultEducation = "Datateknikker med speciale i programmering";
+const defaultProfileCode = "H5PD010126";
+
+const profileName = ref("Bruger");
+const profileEducation = ref(defaultEducation);
+const profileCode = ref(defaultProfileCode);
+const profileMessage = ref("");
+const profileEmail = ref("-");
+
+const personalInfo = computed(() => [
   {
     icon: callOutline,
     label: "Telefon",
@@ -173,7 +188,7 @@ const personalInfo = [
   {
     icon: mailOutline,
     label: "Mail",
-    value: "kevin.hansen@studieplus.dk",
+    value: profileEmail.value,
   },
   {
     icon: locationOutline,
@@ -185,7 +200,7 @@ const personalInfo = [
     label: "Studietid",
     value: "2. semester",
   },
-];
+]);
 
 const schoolPath = [
   {
@@ -214,6 +229,50 @@ const employer = {
   details:
     "Arbejder med frontend-opgaver i Vue og deltager i sprint planlægning. Fokus på kvalitet, test og samarbejde i teamet.",
 };
+
+async function loadDirectLoginProfile() {
+  const loginMethod = getStoredLoginMethod();
+  const loginIdentifier = getStoredLoginIdentifier();
+
+  if (loginMethod !== "direct") {
+    profileMessage.value = "Profil-data er kun koblet på direkte login lige nu.";
+    profileEmail.value = "-";
+    return;
+  }
+
+  if (!loginIdentifier) {
+    profileMessage.value = "Ingen direkte login-bruger fundet i sessionen.";
+    profileEmail.value = "-";
+    return;
+  }
+
+  profileEmail.value = loginIdentifier;
+
+  try {
+    const students = await getStudents();
+    const student = findStudentByLoginIdentifier(students, loginIdentifier);
+
+    if (!student) {
+      profileName.value = loginIdentifier;
+      profileCode.value = defaultProfileCode;
+      profileMessage.value = "Kunne ikke matche brugeren i elevlisten, viser login-oplysninger i stedet.";
+      return;
+    }
+
+    profileName.value = `${student.firstName} ${student.lastName}`.trim();
+    profileEmail.value = student.email;
+    profileCode.value = `ELEV-${student.id.slice(0, 8).toUpperCase()}`;
+    profileMessage.value = "";
+  } catch (error) {
+    console.error("Failed to load profile data", error);
+    profileName.value = loginIdentifier;
+    profileMessage.value = "Kunne ikke hente profil-data fra API.";
+  }
+}
+
+onIonViewDidEnter(() => {
+  void loadDirectLoginProfile();
+});
 </script>
 
 <style scoped>

@@ -98,6 +98,16 @@
   color: rgba(203, 220, 244, 0.88);
 }
 
+.panel-state {
+  margin: 0 4px 10px;
+  font-size: 0.82rem;
+  color: rgba(205, 220, 243, 0.86);
+}
+
+.panel-state--error {
+  color: #ffb4b4;
+}
+
 .filter-btn {
   --color: #dbe9ff;
   font-size: 0.84rem;

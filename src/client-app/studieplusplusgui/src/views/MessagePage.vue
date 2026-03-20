@@ -38,10 +38,13 @@
             </ion-button>
           </div>
 
+          <p v-if="messagesLoading" class="panel-state">Henter beskeder...</p>
+          <p v-else-if="messagesError" class="panel-state panel-state--error">{{ messagesError }}</p>
+
           <ion-list lines="none" class="message-list">
             <ion-item
               v-for="chat in chats"
-              :key="chat.name"
+              :key="chat.key"
               class="message-item"
               button
               :detail="true"
@@ -147,11 +150,14 @@ import {
   IonBadge,
   IonModal,
   IonFooter,
+  onIonViewDidEnter,
 } from '@ionic/vue';
 import { computed, ref } from 'vue';
 import { closeOutline, createOutline, funnelOutline, mailOpenOutline, sendOutline } from 'ionicons/icons';
+import { getNormalizedMessageChats } from '@/services/messagesService';
 
 type ChatItem = {
+  key: string;
   name: string;
   preview: string;
   time: string;
@@ -168,6 +174,7 @@ type ChatMessage = {
 
 const chats = ref<ChatItem[]>([
   {
+    key: 'Projektgruppe H5',
     name: 'Projektgruppe H5',
     preview: 'Kan vi mødes 13:15 i lokale B-204 for at fordele opgaver?',
     time: '09:42',
@@ -175,6 +182,7 @@ const chats = ref<ChatItem[]>([
     avatar: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=300&auto=format&fit=crop',
   },
   {
+    key: 'Mette - Systemudvikling',
     name: 'Mette - Systemudvikling',
     preview: 'Husk at læse API-opgaven inden timen i morgen.',
     time: '08:17',
@@ -182,6 +190,7 @@ const chats = ref<ChatItem[]>([
     avatar: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=300&auto=format&fit=crop',
   },
   {
+    key: 'Studievejledning',
     name: 'Studievejledning',
     preview: 'Din samtale er booket onsdag kl. 10:00.',
     time: 'I går',
@@ -189,6 +198,7 @@ const chats = ref<ChatItem[]>([
     avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=300&auto=format&fit=crop',
   },
   {
+    key: 'Signe - ERP Team',
     name: 'Signe - ERP Team',
     preview: 'Jeg har opdateret slides. Vil du tage intro-delen?',
     time: 'I går',
@@ -196,6 +206,7 @@ const chats = ref<ChatItem[]>([
     avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=300&auto=format&fit=crop',
   },
   {
+    key: 'Anders - Praktik',
     name: 'Anders - Praktik',
     preview: 'Tak for status. Kan du sende commit-link inden kl. 15?',
     time: 'I går',
@@ -203,6 +214,7 @@ const chats = ref<ChatItem[]>([
     avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=300&auto=format&fit=crop',
   },
   {
+    key: 'Lene - Studieadmin',
     name: 'Lene - Studieadmin',
     preview: 'Vi mangler din underskrift på praktikaftalen.',
     time: 'Man',
@@ -210,6 +222,7 @@ const chats = ref<ChatItem[]>([
     avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=300&auto=format&fit=crop',
   },
   {
+    key: 'API Workshop',
     name: 'API Workshop',
     preview: 'Nye noter er lagt op i Teams under "Materialer".',
     time: 'Man',
@@ -217,6 +230,7 @@ const chats = ref<ChatItem[]>([
     avatar: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=300&auto=format&fit=crop',
   },
   {
+    key: 'Sofie - Design',
     name: 'Sofie - Design',
     preview: 'Jeg har opdateret komponentfarverne til staging.',
     time: 'Søn',
@@ -224,6 +238,7 @@ const chats = ref<ChatItem[]>([
     avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=300&auto=format&fit=crop',
   },
   {
+    key: 'Mikkel - Mentor',
     name: 'Mikkel - Mentor',
     preview: 'Flot fremgang. Hold fokus på testdokumentation.',
     time: 'Søn',
@@ -231,6 +246,7 @@ const chats = ref<ChatItem[]>([
     avatar: 'https://images.unsplash.com/photo-1541534401786-2077eed87a72?q=80&w=300&auto=format&fit=crop',
   },
   {
+    key: 'Klasseforum H5',
     name: 'Klasseforum H5',
     preview: 'Nogen der vil bytte torsdagens fremlæggelses-slot?',
     time: 'Lør',
@@ -254,6 +270,9 @@ const chatThreads = ref<Record<string, ChatMessage[]>>({
   ],
 });
 
+const fallbackChats = JSON.parse(JSON.stringify(chats.value)) as ChatItem[];
+const fallbackThreads = JSON.parse(JSON.stringify(chatThreads.value)) as Record<string, ChatMessage[]>;
+
 let messageIdCounter = 100;
 const nextMessageId = () => {
   messageIdCounter += 1;
@@ -264,6 +283,8 @@ const selectedChat = ref<ChatItem | null>(null);
 const isChatOpen = ref(false);
 const activeMessages = ref<ChatMessage[]>([]);
 const messageDraft = ref('');
+const messagesLoading = ref(false);
+const messagesError = ref('');
 
 const formatNow = () =>
   new Date().toLocaleTimeString('da-DK', {
@@ -277,12 +298,12 @@ const fallbackThread = (chat: ChatItem): ChatMessage[] => [
 
 const persistActiveThread = () => {
   if (!selectedChat.value) return;
-  chatThreads.value[selectedChat.value.name] = [...activeMessages.value];
+  chatThreads.value[selectedChat.value.key] = [...activeMessages.value];
 };
 
 const openChat = (chat: ChatItem) => {
   selectedChat.value = chat;
-  activeMessages.value = [...(chatThreads.value[chat.name] ?? fallbackThread(chat))];
+  activeMessages.value = [...(chatThreads.value[chat.key] ?? fallbackThread(chat))];
   chat.unread = 0;
   messageDraft.value = '';
   isChatOpen.value = true;
@@ -311,9 +332,9 @@ const sendMessage = () => {
   messageDraft.value = '';
   persistActiveThread();
 
-  const openChatName = selectedChat.value.name;
+  const openChatKey = selectedChat.value.key;
   window.setTimeout(() => {
-    if (!selectedChat.value || selectedChat.value.name !== openChatName) return;
+    if (!selectedChat.value || selectedChat.value.key !== openChatKey) return;
 
     activeMessages.value.push({
       id: nextMessageId(),
@@ -324,6 +345,49 @@ const sendMessage = () => {
     persistActiveThread();
   }, 650);
 };
+
+const applyFallbackData = () => {
+  chats.value = JSON.parse(JSON.stringify(fallbackChats)) as ChatItem[];
+  chatThreads.value = JSON.parse(JSON.stringify(fallbackThreads)) as Record<string, ChatMessage[]>;
+};
+
+const loadMessagesFromApi = async () => {
+  messagesLoading.value = true;
+  messagesError.value = '';
+
+  try {
+    const normalizedChats = await getNormalizedMessageChats();
+
+    if (normalizedChats.length === 0) {
+      applyFallbackData();
+      messagesError.value = '';
+      return;
+    }
+
+    chats.value = normalizedChats.map((chat) => ({
+      key: chat.key,
+      name: chat.name,
+      preview: chat.preview,
+      time: chat.time,
+      unread: chat.unread,
+      avatar: chat.avatar,
+    }));
+
+    chatThreads.value = Object.fromEntries(
+      normalizedChats.map((chat) => [chat.key, chat.messages])
+    );
+  } catch (error) {
+    console.error('Failed to load messages from API', error);
+    applyFallbackData();
+    messagesError.value = '';
+  } finally {
+    messagesLoading.value = false;
+  }
+};
+
+onIonViewDidEnter(() => {
+  void loadMessagesFromApi();
+});
 
 const unreadCount = computed(() => chats.value.reduce((sum, chat) => sum + chat.unread, 0));
 const activeToday = computed(() => chats.value.filter((chat) => chat.time !== 'I går').length);

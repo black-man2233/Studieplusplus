@@ -2,7 +2,9 @@ using System;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -11,6 +13,7 @@ using Scalar.AspNetCore;
 using Serilog;
 using StudiePlusPlus.Infrastructure;
 using StudiePlusPlus.Infrastructure.Persistence;
+using StudiePlusPlus.Infrastructure.Persistence.Seeding;
 
 namespace StudiePlusPlus.API;
 
@@ -68,6 +71,12 @@ public class Program
                 logger.LogInformation("Connecting to database...");
                 context.Database.EnsureCreated();
                 logger.LogInformation("Database ready.");
+
+                var seedingEnabled = builder.Configuration.GetValue("Seeding:Enabled", app.Environment.IsDevelopment());
+                if (seedingEnabled)
+                {
+                    FakeDataSeeder.SeedIfEmpty(context, logger);
+                }
             }
             catch (Exception ex)
             {
@@ -95,6 +104,7 @@ public class Program
         app.UseHttpsRedirection();
         app.UseAuthentication();
         app.UseAuthorization();
+        app.MapGet("/", () => Results.Redirect("/scalar"));
         app.MapControllers();
 
         logger.LogInformation("API ready. Listening on port 8080.");

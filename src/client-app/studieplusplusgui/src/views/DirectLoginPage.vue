@@ -79,7 +79,7 @@ async function submitDirectLogin() {
   errorMsg.value = '';
   loading.value = true;
   await new Promise((resolve) => setTimeout(resolve, 500));
-  const ok = login(username.value, password.value);
+  const ok = login(username.value, password.value, 'direct');
   loading.value = false;
 
   if (ok) {
